@@ -12,6 +12,7 @@ use App\Models\EmploymentReference;
 class ApplicantEmploymentController extends Controller
 {
     public function list(Request $request){
+        
         $applicantId = (isset($request->applicantId) && $request->applicantId > 0 ? $request->applicantId : '0');
         $queryStr = (isset($request->querystr) && !empty($request->querystr) ? $request->querystr : '');
         $status = (isset($request->status) && $request->status > 0 ? $request->status : 1);
