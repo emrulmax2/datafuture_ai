@@ -1,6 +1,6 @@
 #!/bin/sh
 # Change to the project directory
-cd /home/smslccuk/datafuture/
+cd /home/datafutureailcca/datafuture_ai/
 
 # Pull the latest changes from the git repository
 git pull origin main
