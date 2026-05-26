@@ -1,75 +1,25 @@
-name: Deploy to cPanel via SSH
+name: Deploy
 
 on:
   push:
     branches:
-      - main  # Change to your production branch name if different
+      - main
 
 jobs:
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, bcmath, pdo, pdo_mysql, xml, curl, zip
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '16.15.1'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
-
-      - name: Install PHP dependencies
-        run: composer install --no-dev --optimize-autoloader --no-interaction
-
-      - name: Install Node dependencies & build assets
-        run: |
-          pnpm install --no-frozen-lockfile
-          pnpm run build
-
-      - name: Deploy to server via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            set -e
-
-            cd ${{ secrets.DEPLOY_PATH }}
-
-            echo "--- Pulling latest code ---"
-            git pull origin main
-
-            echo "--- Installing Composer dependencies ---"
-            composer install --no-dev --optimize-autoloader --no-interaction
-
-            echo "--- Installing Node dependencies & building assets ---"
-            pnpm install --frozen-lockfile
-            pnpm run build
-
-            echo "--- Running database migrations ---"
-            php artisan migrate --force
-
-            echo "--- Clearing & caching config ---"
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
-            php artisan event:cache
-
-            echo "--- Restarting queue workers ---"
-            php artisan queue:restart
-
-            echo "--- Deployment complete ---"
+    - name: Deploy
+      run: |
+        ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'bash -s' < ${{ github.workspace }}/.github/workflows/deploy.sh
