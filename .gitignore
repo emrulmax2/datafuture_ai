@@ -19,11 +19,4 @@ yarn-error.log
 /.vscode
 .env.live2
 .env.local
-pnpm-lock.yaml
-composer.lock
-composer.lock
-pnpm-lock.yaml
-*.lock
 
-pnpm-lock.yaml
-composer.lock
