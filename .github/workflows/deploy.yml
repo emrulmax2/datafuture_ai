@@ -35,7 +35,7 @@ jobs:
 
       - name: Install Node dependencies & build assets
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install --no-frozen-lockfile
           pnpm run build
 
       - name: Deploy to server via SSH
