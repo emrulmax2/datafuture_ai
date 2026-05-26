@@ -1,0 +1,1245 @@
+@extends('../layout/' . $layout)
+
+@section('subhead')
+    <title>{{ $title }}</title>
+@endsection
+
+@section('subcontent')
+    <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
+        <h2 class="text-lg font-medium mr-auto">File Manager</h2>
+        <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+            @if(($parent_id > 0 && (isset($root_permission->role->create) && $root_permission->role->create == 1)) || ($parent_id == 0 && isset(auth()->user()->priv()['file_manager']) && auth()->user()->priv()['file_manager'] == 1))
+                <button type="button" data-tw-toggle="modal" data-tw-target="#addFolderModal" class="add_btn btn btn-primary shadow-md mr-2">New Folder</button>
+            @endif
+            @if($parent_id > 0 && (isset($root_permission->role->create) && $root_permission->role->create == 1))
+                <button type="button" data-tw-toggle="modal" data-tw-target="#addFileModal" class="add_btn btn btn-primary shadow-md mr-2">Upload File</button>
+            @endif
+            @if($folders->count() > 0 || $files->count() > 0)
+            <div class="btnGroup fileManagerViewToggle inline-flex bg-slate-100 border rounded shadow-md">
+                <button type="button" class="btn-grid active"><i data-lucide="layout-grid" class="w-5 h-5"></i></button>
+                <button type="button" class="btn-list"><i data-lucide="list" class="w-5 h-5"></i></button>
+            </div>
+            @endif
+        </div>
+    </div>
+    <div class="intro-y box p-5 mt-5">
+        @if($folders->count() > 0 || $files->count() > 0)
+        <div class="folderGridWrap activeGrid">
+            <div class="activeListHeader">
+                <div class="font-medium uppercase fileNameCol">Name</div>
+                <div class="font-medium uppercase fileExpCol">Expiry Date</div>
+                <div class="font-medium uppercase filePubCol">Website Pub. Date</div>
+                <div class="font-medium uppercase fileUpdateCol">Last Modified</div>
+                <div class="font-medium uppercase fileOwnedCol">Owned By</div>
+                <div class="font-medium uppercase fileActCol">&nbsp;</div>
+            </div>
+            @if(!empty($folders) && $folders->count() > 0)
+                @foreach($folders as $folder)
+                    @php 
+                        $parameters = (!empty($params) ? explode('/', $params) : []);
+                        $parameters[] = $folder->slug;
+
+                        $parameters = implode('/', $parameters);
+                    @endphp
+                    <div data-id="{{ $folder->id }}" 
+                        data-name="{{ $folder->name }}" 
+                        data-href="{{ route('file.manager', $parameters) }}" class="fileFolderWrap cursor-pointer folderWrap" 
+                        data-metac="{{ (isset($root_permission->role->create) ? $root_permission->role->create : ($parent_id == 0 && isset($folder->folder_permission->create) ? $folder->folder_permission->create : 0)) }}"
+                        data-metar="{{ (isset($root_permission->role->read) ? $root_permission->role->read : ($parent_id == 0 && isset($folder->folder_permission->read) ? $folder->folder_permission->read : 0)) }}"
+                        data-metau="{{ (isset($root_permission->role->update) ? $root_permission->role->update : ($parent_id == 0 && isset($folder->folder_permission->update) ? $folder->folder_permission->update : 0)) }}"
+                        data-metad="{{ (isset($root_permission->role->delete) ? $root_permission->role->delete : ($parent_id == 0 && isset($folder->folder_permission->delete) ? $folder->folder_permission->delete : 0)) }}" 
+                        data-parent="{{ $parent_id }}" 
+                        >
+                        <div class="folderItem gridItems filesFoldersBox text-center">
+                            <div class="fileNameBodyCol">
+                                <div class="fileFolderImg">
+                                    <img src="{{ asset('build/assets/images/file_icons/folder.png') }}" alt="{{ $folder->name }}"/>
+                                </div>
+                                <h5>{{ $folder->name }}</h5>
+                            </div>
+                            <div class="fileFolderExpire text-slate-400">--</div>
+                            <div class="fileFolderPub text-slate-400">--</div>
+                            <div class="fileFolderUpdated">{{ (!empty($folder->updated_at) ? date('jS F, Y', strtotime($folder->updated_at)) : date('jS F, Y', strtotime($folder->created_at))) }}</div>
+                            @if(isset($root->folder_admins) && !empty($root->folder_admins))
+                                <div class="ownedBy">
+                                    <div class="flex">
+                                        @foreach($root->folder_admins as $admin)
+                                            @if(isset($admin['photo_url']) && !empty($admin['photo_url']))
+                                            <div class="w-8 h-8 image-fit zoom-in {{ (!$loop->first ? '-ml-5' : '') }}">
+                                                <img title="{{ $admin['full_name'] }}" alt="{{ $admin['full_name'] }}" class="tooltip rounded-full" src="{{ $admin['photo_url'] }}">
+                                            </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @else
+                                <div class="ownedBy">
+                                    <div class="flex">
+                                        @foreach($folder->permission as $permission)
+                                            @if(isset($permission->employee->photo_url) && !empty($permission->employee->photo_url))
+                                            <div class="w-8 h-8 image-fit zoom-in {{ (!$loop->first ? '-ml-5' : '') }}">
+                                                <img title="{{ $permission->employee->full_name }}" alt="{{ $permission->employee->full_name }}" class="tooltip rounded-full" src="{{ $permission->employee->photo_url }}">
+                                            </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                            <div class="fileActData justify-end"></div>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+            @if(!empty($files) && $files->count() > 0)
+                @foreach($files as $theFile)
+                    @php 
+                        $currentFileName = explode('.', $theFile->current_file_name);
+                        $fileExtension = end($currentFileName);
+                    @endphp
+                    <div 
+                        data-id="{{ $theFile->id }}" 
+                        data-name="{{ $theFile->display_file_name }}" 
+                        data-url="{{ (isset($theFile->download_url) ? $theFile->download_url : '') }}"
+                        data-metac="{{ (isset($root_permission->role->create) ? $root_permission->role->create : 0) }}"
+                        data-metar="{{ (isset($root_permission->role->read) ? $root_permission->role->read : 0) }}"
+                        data-metau="{{ (isset($root_permission->role->update) ? $root_permission->role->update : 0) }}"
+                        data-metad="{{ (isset($root_permission->role->delete) ? $root_permission->role->delete : 0) }}" 
+                        data-parent="{{ $parent_id }}" 
+
+                        data-href="{{ ($theFile->download_url ? $theFile->download_url : '') }}" 
+                        class="fileFolderWrap cursor-pointer fileWrap relative"
+                        >
+                        <div class="fileItem gridItems filesFoldersBox text-center">
+                            <div class="fileNameBodyCol">
+                                <div class="fileFolderImg">
+                                    <img src="{{ asset('build/assets/images/file_icons/'.strtolower($fileExtension).'.png') }}" alt="{{ $theFile->display_file_name }}"/>
+                                </div>
+                                <h5>
+                                    {!! $theFile->type == 2 ? '<span class="fileType text-danger text-xs mb-0.5 font-bold">Private</span>' : '<span class="fileType text-success text-xs mb-0.5 font-bold">Public</span>' !!}
+                                    {{ $theFile->display_file_name }}
+                                    @if(isset($theFile->tags) && $theFile->tags->count() > 0)
+                                        <div class="fileTags flex justify-start items-start mt-0.5">
+                                            @foreach($theFile->tags as $tag)
+                                                <span class="bg-slate-200 text-primary px-1 py-0.5 text-xs font-bold mr-0.5 mb-0.5 rounded-sm">#{{ $tag->tag->name }}</span>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </h5>
+                            </div>
+                            <div class="fileFolderExpire">{{ (!empty($theFile->expire_at) ? date('jS F, Y', strtotime($theFile->expire_at)) : date('jS F, Y', strtotime($theFile->expire_at))) }}</div>
+                            <div class="fileFolderPub">{{ (!empty($theFile->publish_date) ? date('jS F, Y', strtotime($theFile->publish_date)) : date('jS F, Y', strtotime($theFile->publish_date))) }}</div>
+                            <div class="fileFolderUpdated">{{ (!empty($theFile->updated_at) ? date('jS F, Y', strtotime($theFile->updated_at)) : date('jS F, Y', strtotime($theFile->created_at))) }}</div>
+                            @if(isset($root->folder_admins) && !empty($root->folder_admins))
+                                <div class="ownedBy">
+                                    <div class="flex">
+                                        @foreach($root->folder_admins as $admin)
+                                            @if(isset($admin['photo_url']) && !empty($admin['photo_url']))
+                                            <div class="w-8 h-8 image-fit zoom-in {{ (!$loop->first ? '-ml-5' : '') }}">
+                                                <img title="{{ $admin['full_name'] }}" alt="{{ $admin['full_name'] }}" class="tooltip rounded-full" src="{{ $admin['photo_url'] }}">
+                                            </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @else
+                                <div class="ownedBy">---</div>
+                            @endif
+                            <div class="fileActData justify-end">
+                                @if(!empty($theFile->description))
+                                    <a href="javascript:;" data-theme="light" data-tooltip-content="#fileDescription_{{ $theFile->id }}" data-trigger="click" class="tooltip bg-slate-200 text-primary w-[30px] h-[30px] rounded-full inline-flex items-center justify-center" title="{{ $theFile->description }}">
+                                        <i data-lucide="file-text" class="w-4 h-4 text-primary"></i>
+                                    </a>
+
+                                    <!-- BEGIN: Custom Tooltip Content -->
+                                    <div class="tooltip-content">
+                                        <div id="fileDescription_{{ $theFile->id }}" class="relative w-72 flex items-center py-1">
+                                            <div class="mr-auto">
+                                                <div class="font-medium dark:text-slate-200 leading-relaxed">Description</div>
+                                                <div class="text-slate-500 dark:text-slate-400">{!! $theFile->description !!}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- END: Custom Tooltip Content -->    
+                                @endif
+                            </div>
+                        </div>
+                        @if(isset($theFile->latestVersion->attachments) && $theFile->latestVersion->attachments->count() > 0)
+                        <button type="button" data-tw-toggle="modal" data-tw-target="#fileAttachmentModal" data-id="{{ $theFile->latestVersion->id }}" class="attachmentToggleBtn btn btn-facebook p-0 w-[30px] h-[30px] text-white rounded-full rounded-tr-none absolute top-0 right-0">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                        </button>
+                        @endif
+                    </div>
+                @endforeach
+            @endif
+
+        </div>
+        @else 
+        <div class="alert alert-pending-soft show flex items-center mb-2" role="alert">
+            <i data-lucide="alert-triangle" class="w-6 h-6 mr-2"></i> <div><strong>Oops!</strong> The directory is empty.</div>
+        </div>
+        @endif
+    </div>
+
+    <!-- BEGIN: Folder Dropdown Start -->
+    <div class="dropdown-menu folderDropdown w-40">
+        <ul class="dropdown-content">
+            <li class="editFolderLink">
+                <a data-id="0" data-tw-toggle="modal" data-tw-target="#editFolderModal" href="javascript:void(0);" class="editFolder dropdown-item">
+                    <i data-lucide="pencil-line" class="text-success w-4 h-4 mr-2"></i> Edit Folder
+                </a>
+            </li>
+            <li class="editFolderPermissionLink">
+                <a data-id="0" data-tw-toggle="modal" data-tw-target="#editFolderPermissionModal" href="javascript:void(0);" class="editPermission dropdown-item">
+                    <i data-lucide="user-cog" class="text-info w-4 h-4 mr-2"></i> Edit Permission
+                </a>
+            </li>
+            <li class="deleteFolderLink">
+                <a data-name="" data-id="0" href="javascript:void(0);" class="deleteFolder dropdown-item">
+                    <i data-lucide="trash-2" class="text-danger w-4 h-4 mr-2"></i> Delete Folder
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- BEGIN: Folder Dropdown End -->
+
+    <!-- BEGIN: File Dropdown Start -->
+    <div class="dropdown-menu fileDropdown w-48" >
+        <ul class="dropdown-content">
+            <li class="downloadLink">
+                <a href="" class="downloadDoc dropdown-item">
+                    <i data-lucide="download-cloud" class="text-success w-4 h-4 mr-2"></i> Download
+                </a>
+            </li>
+            <li class="editFileLink">
+                <a data-id="0" data-name="" data-tw-toggle="modal" data-tw-target="#editFileModal" href="javascript:void(0);" class="editFile dropdown-item">
+                    <i data-lucide="upload-cloud" class="text-success w-4 h-4 mr-2"></i> Upload New Version
+                </a>
+            </li>
+            <!-- <li class="uploadVersionLink">
+                <a data-id="0" data-name="" data-tw-toggle="modal" data-tw-target="#uploadFileVersionModal" href="javascript:void(0);" class="uploadNewVersion dropdown-item">
+                    <i data-lucide="upload-cloud" class="text-success w-4 h-4 mr-2"></i> Upload New Version
+                </a>
+            </li> -->
+            <li class="fileRenameLink">
+                <a data-id="0" data-name="" data-tw-toggle="modal" data-tw-target="#fileRenameModal" href="javascript:void(0);" class="fileRename dropdown-item">
+                    <i data-lucide="pencil" class="text-success w-4 h-4 mr-2"></i> Rename
+                </a>
+            </li>
+            <li class="versionHistoryLink">
+                <a data-id="0" data-name="" data-tw-toggle="modal" data-tw-target="#fileHistoryModal" href="javascript:void(0);" class="versionHistory dropdown-item">
+                    <i data-lucide="file-clock" class="text-success w-4 h-4 mr-2"></i> Version History
+                </a>
+            </li>
+            {{--<li class="editPermissionLink">
+                <a data-id="0" data-name="" data-tw-toggle="modal" data-tw-target="#editFilePermissionModal" href="javascript:void(0);" class="editFilePermission dropdown-item">
+                    <i data-lucide="user-cog" class="text-info w-4 h-4 mr-2"></i> Edit Permission
+                </a>
+            </li>--}}
+            <!-- <li class="reminderLink">
+                <a data-id="0" data-name="" data-tw-toggle="modal" data-tw-target="#fileReminderModal" href="javascript:void(0);" class="fileReminderBtn dropdown-item">
+                    <i data-lucide="bell" class="text-info w-4 h-4 mr-2"></i> Reminder
+                </a>
+            </li> -->
+            <li class="deleteFileLink">
+                <a data-name="" data-id="0" href="javascript:void(0);" class="deleteFile dropdown-item">
+                    <i data-lucide="trash-2" class="text-danger w-4 h-4 mr-2"></i> Delete File
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- BEGIN: File Dropdown End -->
+
+
+
+    <!-- BEGIN: Rename File Modal -->
+    <div id="fileRenameModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xs">
+            <form method="POST" action="#" id="fileRenameForm" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Rename File</h2>
+                        <a data-tw-dismiss="modal" href="javascript:;">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div class="w-full">
+                            <label for="re_name" class="form-label">Document Name <span class="text-danger">*</span></label>
+                            <input id="re_name" type="text" name="name" class="form-control w-full">
+                            <div class="acc__input-error error-name text-danger mt-2"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                        <button type="submit" id="renameFileBtn" class="btn btn-primary w-auto">     
+                            Rename                      
+                            <svg style="display: none;" width="25" viewBox="-2 -2 42 42" xmlns="http://www.w3.org/2000/svg"
+                                stroke="white" class="w-4 h-4 ml-2">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(1 1)" stroke-width="4">
+                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"></circle>
+                                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                                to="360 18 18" dur="1s" repeatCount="indefinite"></animateTransform>
+                                        </path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <input type="hidden" name="document_info_id" value="0"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- END: Rename File Modal -->
+
+
+    <!-- BEGIN: File Attachment Modal -->
+    <div id="fileAttachmentModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <form method="POST" action="#" id="fileAttachmentForm" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Attachment of  <span class="displayName underline font-bold"></span></h2>
+                        <a data-tw-dismiss="modal" href="javascript:;">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Close</button>
+                        <!-- <button type="submit" id="saveReminder" class="btn btn-primary w-auto">     
+                            Save                      
+                            <svg style="display: none;" width="25" viewBox="-2 -2 42 42" xmlns="http://www.w3.org/2000/svg"
+                                stroke="white" class="w-4 h-4 ml-2">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(1 1)" stroke-width="4">
+                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"></circle>
+                                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                                to="360 18 18" dur="1s" repeatCount="indefinite"></animateTransform>
+                                        </path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button> -->
+                        <input type="hidden" name="document_info_id" value="0"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- END: File Attachment Modal -->
+
+
+    <!-- BEGIN: File Reminder Modal
+    <div id="fileReminderModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <form method="POST" action="#" id="fileReminderForm" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">File Reminder <span class="displayName underline font-bold"></span></h2>
+                        <a data-tw-dismiss="modal" href="javascript:;">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label for="subject" class="form-label">Subject <span class="text-danger">*</span></label>
+                            <input type="text" name="subject" class="form-control w-full" id="subject"/>
+                        </div>
+                        <div class="mt-3">
+                            <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
+                            <textarea rows="4" name="message" class="form-control w-full" id="message"></textarea>
+                        </div>
+                        <div class="grid grid-cols-12 gap-x-4 gap-y-0 mt-3">
+                            <div class="col-span-3">
+                                <div class="form-check" style="padding-top: 38px;">
+                                    <input id="is_repeat_reminder" name="is_repeat_reminder" class="form-check-input" type="checkbox" value="1">
+                                    <label class="form-check-label" for="is_repeat_reminder">Repeat Reminder</label>
+                                </div>
+                            </div>
+                            <div class="col-span-3">
+                                <div class="form-check" style="padding-top: 38px;">
+                                    <input id="is_send_email" name="is_send_email" class="form-check-input" type="checkbox" value="1">
+                                    <label class="form-check-label" for="is_send_email">Send Email</label>
+                                </div>
+                            </div>
+                            <div class="col-span-6">
+                                <label for="reminder_employee_ids" class="form-label">Employees <span class="text-danger">*</span></label>
+                                <select name="employee_ids[]" id="reminder_employee_ids" class="w-full tom-selects" multiple>
+                                    @if(!empty($employee))
+                                        @foreach($employee as $emp)
+                                            <option value="{{ $emp->id }}">{{ $emp->full_name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                <div class="acc__input-error error-employee_ids text-danger mt-2"></div>
+                            </div>
+                        </div>
+                        <div class="reminderSingleWrap">
+                            <div class="grid grid-cols-12 gap-x-4 gap-y-0 mt-3">
+                                <div class="col-span-4">
+                                    <label for="single_reminder_date" class="form-label">Reminder Date <span class="text-danger">*</span></label>
+                                    <input type="text" value="{{ date('d-m-Y') }}" name="single_reminder_date" class="form-control w-full datepicker" id="single_reminder_date" data-format="DD-MM-YYYY" data-single-mode="true"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reminderMultiWrap" style="display: none;">
+                            <div class="grid grid-cols-12 gap-x-4 gap-y-0 mt-3">
+                                <div class="col-span-4">
+                                    <label for="frequency" class="form-label">Reminder Date <span class="text-danger">*</span></label>
+                                    <select id="frequency" name="frequency" class="form-control w-full">
+                                        <option value="">Please Select</option>
+                                        <option value="Daily" class="ng-star-inserted">Daily</option>
+                                        <option value="Weekly" class="ng-star-inserted">Weekly</option>
+                                        <option value="Monthly" class="ng-star-inserted">Monthly</option>
+                                        <option value="Quarterly" class="ng-star-inserted">Quarterly</option>
+                                        <option value="Half Yearly" class="ng-star-inserted">Half Yearly</option>
+                                        <option value="Yearly" class="ng-star-inserted">Yearly</option>
+                                    </select>
+                                </div>
+                                <div class="col-span-4">
+                                    <label for="repeat_reminder_start" class="form-label">Reminder Start <span class="text-danger">*</span></label>
+                                    <input type="text" value="{{ date('d-m-Y') }}" name="repeat_reminder_start" class="form-control w-full datepicker" id="repeat_reminder_start" data-format="DD-MM-YYYY" data-single-mode="true"/>
+                                </div>
+                                <div class="col-span-4">
+                                    <label for="repeat_reminder_end" class="form-label">Reminder End</label>
+                                    <input type="text" value="" name="repeat_reminder_end" class="form-control w-full datepicker" id="repeat_reminder_end" data-format="DD-MM-YYYY" data-single-mode="true"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                        <button type="submit" id="saveReminder" class="btn btn-primary w-auto">     
+                            Save                      
+                            <svg style="display: none;" width="25" viewBox="-2 -2 42 42" xmlns="http://www.w3.org/2000/svg"
+                                stroke="white" class="w-4 h-4 ml-2">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(1 1)" stroke-width="4">
+                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"></circle>
+                                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                                to="360 18 18" dur="1s" repeatCount="indefinite"></animateTransform>
+                                        </path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <input type="hidden" name="document_info_id" value="0"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    END: Edit File Permission Modal -->
+
+    <!-- BEGIN: Edit File Permission Modal -->
+    <div id="editFilePermissionModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <form method="POST" action="#" id="editFilePermissionForm" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Edit File Permission</h2>
+                        <a data-tw-dismiss="modal" href="javascript:;">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label for="edit_file_employee_ids" class="form-label">Employees <span class="text-danger">*</span></label>
+                            <select name="employee_ids[]" id="edit_file_employee_ids" class="w-full tom-selects" multiple>
+                                @if(!empty($employee))
+                                    @foreach($employee as $emp)
+                                        <option value="{{ $emp->id }}">{{ $emp->full_name }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            <div class="acc__input-error error-employee_ids text-danger mt-2"></div>
+                        </div>
+                        <div class="mt-3">
+                            <table class="table table-bordered table-sm filePermissionTable">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Role</th>
+                                        <th class="text-center">Create</th>
+                                        <th class="text-center">Read</th>
+                                        <th class="text-center">Update</th>
+                                        <th class="text-center">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="noticeTr">
+                                        <td colspan="6">
+                                            <div class="alert alert-danger-soft show flex items-center mb-2" role="alert"><i data-lucide="alert-octagon" class="w-6 h-6 mr-2"></i> Please select employee and assign role.</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                        <button type="submit" id="updateFilePermission" class="btn btn-primary w-auto">     
+                            Update                      
+                            <svg style="display: none;" width="25" viewBox="-2 -2 42 42" xmlns="http://www.w3.org/2000/svg"
+                                stroke="white" class="w-4 h-4 ml-2">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(1 1)" stroke-width="4">
+                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"></circle>
+                                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                                to="360 18 18" dur="1s" repeatCount="indefinite"></animateTransform>
+                                        </path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <input type="hidden" name="document_info_id" value="0"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- END: Edit File Permission Modal -->
+
+
+    <!-- BEGIN: File History Modal -->
+    <div id="fileHistoryModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="font-medium text-base mr-auto">Version History of <span class="displayName underline font-bold"></span></h2>
+                    <a data-tw-dismiss="modal" href="javascript:;">
+                        <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="overflow-x-auto scrollbar-hidden fileVersionHistoryListTableWrap">
+                        <div data-fileinfo="0" id="fileVersionHistoryListTable" class="table-report table-report--tabulator"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: File History Modal -->
+
+    <!-- BEGIN: File New Version Modal
+    <div id="uploadFileVersionModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="#" id="uploadFileVersionForm" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Upload New Version</h2>
+                        <a data-tw-dismiss="modal" href="javascript:;">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div class="grid grid-cols-12 gap-4 gap-y-1">
+                            <div class="col-span-12">
+                                <label for="document" class="form-label">Upload Document <span class="text-danger">*</span></label>
+                                <label class="uploadWrap form-control relative border flex justify-start items-center cursor-pointer" for="editDocument">
+                                    <input accept="image/*,.doc,.docx,.xl,.xlsx,.xls,.ppt,.pptx,.pdf,.txt,.sql" id="editDocument" type="file" name="document" class="w-full" style="position: absolute; width: 0; height: 0; opacity: 0; visibility: hidden;">
+                                    <span class="btn btn-secondary w-auto">Choose File</span>
+                                    <span id="editDocumentName" class="ml-3"></span>
+                                </label>
+                                <div class="acc__input-error error-document text-danger mt-2"></div>
+                            </div>
+                            {{--<div class="col-span-12">
+                                <label for="linked_document" class="form-label">Linked Document </label>
+                                <input id="linked_document" type="url" name="linked_document" class="form-control w-full">
+                            </div>--}}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                        <button type="submit" id="uploadNV" class="btn btn-primary w-auto">     
+                            Upload                      
+                            <svg style="display: none;" width="25" viewBox="-2 -2 42 42" xmlns="http://www.w3.org/2000/svg"
+                                stroke="white" class="w-4 h-4 ml-2">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(1 1)" stroke-width="4">
+                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"></circle>
+                                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                                to="360 18 18" dur="1s" repeatCount="indefinite"></animateTransform>
+                                        </path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <input type="hidden" name="folder_id" value="{{ $parent_id }}"/>
+                        <input type="hidden" name="params" value="{{ $params }}"/>
+                        <input type="hidden" name="id" value="0"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    END: File New Version Modal -->
+
+    <!-- BEGIN: Edit File Modal -->
+    <div id="editFileModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <form method="POST" action="#" id="editFileForm" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Update File</h2>
+                        <a data-tw-dismiss="modal" href="javascript:;">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div class="grid grid-cols-12 gap-4 gap-y-1">
+                            <div class="col-span-6 pb-3">
+                                <div class="mt-7 flex justify-start items-center relative">
+                                    <label for="editFileUploaderDocument" class="inline-flex items-center w-full text-primary justify-center btn btn-secondary  cursor-pointer">
+                                        <i data-lucide="upload-cloud" class="w-4 h-4 mr-2 text-primary"></i> Upload New Version Documents</span>
+                                    </label>
+                                    <input type="file" accept=".jpeg,.jpg,.png,.gif,.txt,.pdf,.xl,.xls,.xlsx,.doc,.docx,.ppt,.pptx" multiple name="documents[]" class="absolute w-0 h-0 overflow-hidden opacity-0" id="editFileUploaderDocument"/>
+                                </div>
+                                <div id="editFileUploaderDocumentNames" class="editFileUploaderDocumentNames mt-3" style="display: none"></div>
+                            </div>
+                            <div class="col-span-6">
+                                <label for="edit_name" class="form-label">Document Name <span class="text-danger">*</span></label>
+                                <input id="edit_name" type="text" name="name" class="form-control w-full">
+                                <div class="acc__input-error error-name text-danger mt-2"></div>
+                            </div>
+                            <div class="col-span-4">
+                                <label for="edit_expire_at" class="form-label">Exipiry Date</label>
+                                <input id="edit_expire_at" type="text" name="expire_at" class="form-control w-full datepicker" data-format="DD-MM-YYYY" data-single-mode="true">
+                            </div>
+                            <div class="col-span-4">
+                                <label for="edit_publish_date" class="form-label">Website Publish Date</label>
+                                <input id="edit_publish_date" type="text" name="publish_date" class="form-control w-full datepicker" data-format="DD-MM-YYYY" data-single-mode="true">
+                            </div>
+                            <div class="col-span-4">
+                                <label for="edit_file_type" class="form-label">File Type</label>
+                                <div class="flex flex-col sm:flex-row">
+                                    <div class="form-check mr-2">
+                                        <input checked id="edit_file_type_1" class="form-check-input" type="radio" name="file_type" value="1">
+                                        <label class="form-check-label" for="edit_file_type_1">Public</label>
+                                    </div>
+                                    <div class="form-check mr-2 mt-2 sm:mt-0">
+                                        <input id="edit_file_type_2" class="form-check-input" type="radio" name="file_type" value="2">
+                                        <label class="form-check-label" for="edit_file_type_2">Private</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-span-12">
+                                <label for="edit_description" class="form-label">Description</label>
+                                <textarea id="edit_description" name="description" class="form-control w-full" rows="4"></textarea>
+                            </div>
+                            <div class="col-span-12 pt-2">
+                                <label for="tag_ids" class="form-label">Tags</label>
+                                <div class="fileTagsWrap border rounded relative">
+                                    <input type="text" name="tag_search" class="tag_search"/>
+                                    <ul class="autoFillDropdown"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <div class="form-check form-switch">
+                                <input id="edit_email_reminder" class="form-check-input" name="email_reminder" type="checkbox" value="1">
+                                <label class="form-check-label ml-5" for="edit_email_reminder">Email Reminder</label>
+                            </div>
+                        </div>
+                        <div class="emailReminderWrap mt-5" style="display: none;">
+                            <div>
+                                <label for="edit_subject" class="form-label">Subject <span class="text-danger">*</span></label>
+                                <input type="text" name="subject" class="form-control w-full" id="edit_subject"/>
+                            </div>
+                            <div class="mt-3">
+                                <label for="edit_message" class="form-label">Message <span class="text-danger">*</span></label>
+                                <textarea rows="4" name="message" class="form-control w-full" id="edit_message"></textarea>
+                            </div>
+                            <div class="grid grid-cols-12 gap-x-4 gap-y-3 mt-3">
+                                <div class="col-span-6">
+                                    <div class="form-check" style="padding-top: 38px;">
+                                        <input id="edit_is_repeat_reminder" name="is_repeat_reminder" class="form-check-input" type="checkbox" value="1">
+                                        <label class="form-check-label" for="edit_is_repeat_reminder">Repeat Reminder</label>
+                                    </div>
+                                </div>
+                                <div class="col-span-6">
+                                    <div class="form-check" style="padding-top: 38px;">
+                                        <input id="edit_is_send_email" name="is_send_email" class="form-check-input" type="checkbox" value="1">
+                                        <label class="form-check-label" for="edit_is_send_email">Send Email</label>
+                                    </div>
+                                </div>
+                                <div class="col-span-6">
+                                    <label for="edit_reminder_employee_ids" class="form-label">Employees</label>
+                                    <select name="employee_ids[]" id="edit_reminder_employee_ids" class="w-full tom-selects" multiple>
+                                        @if(!empty($employee))
+                                            @foreach($employee as $emp)
+                                                <option value="{{ $emp->id }}">{{ $emp->full_name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <div class="acc__input-error error-employee_ids text-danger mt-2"></div>
+                                </div>
+                                <div class="col-span-6">
+                                    <label for="edit_employee_group_ids" class="form-label">Group <span class="text-danger">*</span></label>
+                                    <select name="employee_group_ids[]" id="edit_employee_group_ids" class="w-full tom-selects" multiple>
+                                        @if(!empty($groups))
+                                            @foreach($groups as $gr)
+                                                <option value="{{ $gr->id }}">{{ $gr->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <div class="acc__input-error error-employee_group_ids text-danger mt-2"></div>
+                                </div>
+                            </div>
+                            <div class="reminderSingleWrap">
+                                <div class="grid grid-cols-12 gap-x-4 gap-y-0 mt-3">
+                                    <div class="col-span-4">
+                                        <label for="edit_single_reminder_date" class="form-label">Reminder Date <span class="text-danger">*</span></label>
+                                        <input type="text" value="{{ date('d-m-Y') }}" name="single_reminder_date" class="form-control w-full datepicker" id="edit_single_reminder_date" data-format="DD-MM-YYYY" data-single-mode="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="reminderMultiWrap" style="display: none;">
+                                <div class="grid grid-cols-12 gap-x-4 gap-y-0 mt-3">
+                                    <div class="col-span-4">
+                                        <label for="edit_frequency" class="form-label">Reminder Date <span class="text-danger">*</span></label>
+                                        <select id="edit_frequency" name="frequency" class="form-control w-full">
+                                            <option value="">Please Select</option>
+                                            <option value="Daily" class="ng-star-inserted">Daily</option>
+                                            <option value="Weekly" class="ng-star-inserted">Weekly</option>
+                                            <option value="Monthly" class="ng-star-inserted">Monthly</option>
+                                            <option value="Quarterly" class="ng-star-inserted">Quarterly</option>
+                                            <option value="Half Yearly" class="ng-star-inserted">Half Yearly</option>
+                                            <option value="Yearly" class="ng-star-inserted">Yearly</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-span-4">
+                                        <label for="edit_repeat_reminder_start" class="form-label">Reminder Start <span class="text-danger">*</span></label>
+                                        <input type="text" value="{{ date('d-m-Y') }}" name="repeat_reminder_start" class="form-control w-full datepicker" id="edit_repeat_reminder_start" data-format="DD-MM-YYYY" data-single-mode="true"/>
+                                    </div>
+                                    <div class="col-span-4">
+                                        <label for="repeat_reminder_end" class="form-label">Reminder End</label>
+                                        <input type="text" value="" name="edit_repeat_reminder_end" class="form-control w-full datepicker" id="edit_repeat_reminder_end" data-format="DD-MM-YYYY" data-single-mode="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                        <button type="submit" id="updateFile" class="btn btn-primary w-auto">     
+                            Update                      
+                            <svg style="display: none;" width="25" viewBox="-2 -2 42 42" xmlns="http://www.w3.org/2000/svg"
+                                stroke="white" class="w-4 h-4 ml-2">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(1 1)" stroke-width="4">
+                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"></circle>
+                                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                                to="360 18 18" dur="1s" repeatCount="indefinite"></animateTransform>
+                                        </path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <input type="hidden" name="folder_id" value="{{ $parent_id }}"/>
+                        <input type="hidden" name="params" value="{{ $params }}"/>
+                        <input type="hidden" name="id" value="0"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- END: Edit File Modal -->
+
+    <!-- BEGIN: Add Tag Modal -->
+    <div id="addTagModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="#" id="addTagForm" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Add Tag</h2>
+                        <a data-tw-dismiss="modal" href="javascript:;">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label for="name" class="form-label">Tag Name <span class="text-danger">*</span></label>
+                            <input id="name" type="text" name="name" class="form-control w-full">
+                            <div class="acc__input-error error-name text-danger mt-2"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                        <button type="submit" id="addTag" class="btn btn-primary w-auto">     
+                            Upload                      
+                            <svg style="display: none;" width="25" viewBox="-2 -2 42 42" xmlns="http://www.w3.org/2000/svg"
+                                stroke="white" class="w-4 h-4 ml-2">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(1 1)" stroke-width="4">
+                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"></circle>
+                                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                                to="360 18 18" dur="1s" repeatCount="indefinite"></animateTransform>
+                                        </path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- END: Add Tag Modal -->
+
+    <!-- BEGIN: Add File Modal -->
+    <div id="addFileModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <form method="POST" action="#" id="addFileForm" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Upload File</h2>
+                        <a data-tw-dismiss="modal" href="javascript:;">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div class="grid grid-cols-12 gap-4 gap-y-1">
+                            <div class="col-span-6 pb-3">
+                                <div class="mt-7 flex justify-start items-center relative">
+                                    <label for="fileUploaderDocument" class="inline-flex items-center w-full text-primary justify-center btn btn-secondary  cursor-pointer">
+                                        <i data-lucide="upload-cloud" class="w-4 h-4 mr-2 text-primary"></i> Upload Documents <span class="text-danger ml-1">*</span>
+                                    </label>
+                                    <input type="file" accept=".jpeg,.jpg,.png,.gif,.txt,.pdf,.xl,.xls,.xlsx,.doc,.docx,.ppt,.pptx" multiple name="documents[]" class="absolute w-0 h-0 overflow-hidden opacity-0" id="fileUploaderDocument"/>
+                                </div>
+                                <div id="fileUploaderDocumentNames" class="fileUploaderDocumentNames mt-3" style="display: none"></div>
+                            </div>
+                            <!-- <div class="col-span-6">
+                                <label for="document" class="form-label">Upload Document <span class="text-danger">*</span></label>
+                                <label class="uploadWrap form-control relative border flex justify-start items-center cursor-pointer" for="addDocument">
+                                    <input accept=".jpg,.jpeg,.png,.doc,.docx,.xl,.xlsx,.xls,.ppt,.pptx,.pdf,.txt,.zip" id="addDocument" type="file" name="document" class="w-full" style="position: absolute; width: 0; height: 0; opacity: 0; visibility: hidden;">
+                                    <span class="btn btn-secondary w-auto">Choose File</span>
+                                    <span id="addDocumentName" class="ml-3"></span>
+                                </label>
+                                <div class="acc__input-error error-document text-danger mt-2"></div>
+                            </div> -->
+                            {{--<div class="col-span-6">
+                                <label for="linked_document" class="form-label">Linked Document </label>
+                                <input id="linked_document" type="url" name="linked_document" class="form-control w-full">
+                            </div>--}}
+                            <div class="col-span-6">
+                                <label for="name" class="form-label">Document Name <span class="text-danger">*</span></label>
+                                <input id="name" type="text" name="name" class="form-control w-full">
+                                <div class="acc__input-error error-name text-danger mt-2"></div>
+                            </div>
+                            <div class="col-span-4">
+                                <label for="expire_at" class="form-label">Exipiry Date</label>
+                                <input id="expire_at" type="text" name="expire_at" class="form-control w-full datepicker" data-format="DD-MM-YYYY" data-single-mode="true">
+                            </div>
+                            <div class="col-span-4">
+                                <label for="publish_date" class="form-label">Website Publish Date</label>
+                                <input id="publish_date" type="text" name="publish_date" class="form-control w-full datepicker" data-format="DD-MM-YYYY" data-single-mode="true">
+                            </div>
+                            <div class="col-span-4">
+                                <label for="file_type" class="form-label">File Type</label>
+                                <div class="flex flex-col sm:flex-row">
+                                    <div class="form-check mr-2">
+                                        <input checked id="file_type_1" class="form-check-input" type="radio" name="file_type" value="1">
+                                        <label class="form-check-label" for="file_type_1">Public</label>
+                                    </div>
+                                    <div class="form-check mr-2 mt-2 sm:mt-0">
+                                        <input id="file_type_2" class="form-check-input" type="radio" name="file_type" value="2">
+                                        <label class="form-check-label" for="file_type_2">Private</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-span-12 pt-2">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea id="description" name="description" class="form-control w-full" rows="4"></textarea>
+                            </div>
+                            <div class="col-span-12 pt-2">
+                                <label for="tag_ids" class="form-label">Tags</label>
+                                <div class="fileTagsWrap border rounded relative">
+                                    <input type="text" name="tag_search" class="tag_search"/>
+                                    <ul class="autoFillDropdown"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <div class="form-check form-switch">
+                                <input id="email_reminder" class="form-check-input" name="email_reminder" type="checkbox" value="1">
+                                <label class="form-check-label ml-5" for="email_reminder">Email Reminder</label>
+                            </div>
+                        </div>
+                        <div class="emailReminderWrap mt-5" style="display: none;">
+                            <div>
+                                <label for="subject" class="form-label">Subject <span class="text-danger">*</span></label>
+                                <input type="text" name="subject" class="form-control w-full" id="subject"/>
+                            </div>
+                            <div class="mt-3">
+                                <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
+                                <textarea rows="4" name="message" class="form-control w-full" id="message"></textarea>
+                            </div>
+                            <div class="grid grid-cols-12 gap-x-4 gap-y-3 mt-3">
+                                <div class="col-span-6">
+                                    <div class="form-check" style="padding-top: 38px;">
+                                        <input id="is_repeat_reminder" name="is_repeat_reminder" class="form-check-input" type="checkbox" value="1">
+                                        <label class="form-check-label" for="is_repeat_reminder">Repeat Reminder</label>
+                                    </div>
+                                </div>
+                                <div class="col-span-6">
+                                    <div class="form-check" style="padding-top: 38px;">
+                                        <input id="is_send_email" name="is_send_email" class="form-check-input" type="checkbox" value="1">
+                                        <label class="form-check-label" for="is_send_email">Send Email</label>
+                                    </div>
+                                </div>
+                                <div class="col-span-6">
+                                    <label for="reminder_employee_ids" class="form-label">Employees </label>
+                                    <select name="employee_ids[]" id="reminder_employee_ids" class="w-full tom-selects" multiple>
+                                        @if(!empty($employee))
+                                            @foreach($employee as $emp)
+                                                <option value="{{ $emp->id }}">{{ $emp->full_name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <div class="acc__input-error error-employee_ids text-danger mt-2"></div>
+                                </div>
+                                <div class="col-span-6">
+                                    <label for="employee_group_ids" class="form-label">Group <span class="text-danger">*</span></label>
+                                    <select name="employee_group_ids[]" id="employee_group_ids" class="w-full tom-selects" multiple>
+                                        @if(!empty($groups))
+                                            @foreach($groups as $gr)
+                                                <option value="{{ $gr->id }}">{{ $gr->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <div class="acc__input-error error-employee_group_ids text-danger mt-2"></div>
+                                </div>
+                            </div>
+                            <div class="reminderSingleWrap">
+                                <div class="grid grid-cols-12 gap-x-4 gap-y-0 mt-3">
+                                    <div class="col-span-4">
+                                        <label for="single_reminder_date" class="form-label">Reminder Date <span class="text-danger">*</span></label>
+                                        <input type="text" value="{{ date('d-m-Y') }}" name="single_reminder_date" class="form-control w-full datepicker" id="single_reminder_date" data-format="DD-MM-YYYY" data-single-mode="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="reminderMultiWrap" style="display: none;">
+                                <div class="grid grid-cols-12 gap-x-4 gap-y-0 mt-3">
+                                    <div class="col-span-4">
+                                        <label for="frequency" class="form-label">Reminder Date <span class="text-danger">*</span></label>
+                                        <select id="frequency" name="frequency" class="form-control w-full">
+                                            <option value="">Please Select</option>
+                                            <option value="Daily" class="ng-star-inserted">Daily</option>
+                                            <option value="Weekly" class="ng-star-inserted">Weekly</option>
+                                            <option value="Monthly" class="ng-star-inserted">Monthly</option>
+                                            <option value="Quarterly" class="ng-star-inserted">Quarterly</option>
+                                            <option value="Half Yearly" class="ng-star-inserted">Half Yearly</option>
+                                            <option value="Yearly" class="ng-star-inserted">Yearly</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-span-4">
+                                        <label for="repeat_reminder_start" class="form-label">Reminder Start <span class="text-danger">*</span></label>
+                                        <input type="text" value="{{ date('d-m-Y') }}" name="repeat_reminder_start" class="form-control w-full datepicker" id="repeat_reminder_start" data-format="DD-MM-YYYY" data-single-mode="true"/>
+                                    </div>
+                                    <div class="col-span-4">
+                                        <label for="repeat_reminder_end" class="form-label">Reminder End</label>
+                                        <input type="text" value="" name="repeat_reminder_end" class="form-control w-full datepicker" id="repeat_reminder_end" data-format="DD-MM-YYYY" data-single-mode="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                        <button type="submit" id="uploadFile" class="btn btn-primary w-auto">     
+                            Upload                      
+                            <svg style="display: none;" width="25" viewBox="-2 -2 42 42" xmlns="http://www.w3.org/2000/svg"
+                                stroke="white" class="w-4 h-4 ml-2">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(1 1)" stroke-width="4">
+                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"></circle>
+                                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                                to="360 18 18" dur="1s" repeatCount="indefinite"></animateTransform>
+                                        </path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <input type="hidden" name="folder_id" value="{{ $parent_id }}"/>
+                        <input type="hidden" name="params" value="{{ $params }}"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- END: Add File Modal -->
+
+
+    <!-- BEGIN: Edit Folder Permission Modal -->
+    <div id="editFolderPermissionModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <form method="POST" action="#" id="editFolderPermissionForm" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Edit Folder Permission</h2>
+                        <a data-tw-dismiss="modal" href="javascript:;">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label for="employee_ids" class="form-label">Employees</label>
+                            <select name="employee_ids[]" id="edit_employee_ids" class="w-full tom-selects" multiple>
+                                @if(!empty($employee))
+                                    @foreach($employee as $emp)
+                                        <option value="{{ $emp->id }}">{{ $emp->full_name }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            <div class="acc__input-error error-employee_ids text-danger mt-2"></div>
+                        </div>
+                        <div class="mt-3">
+                            <table class="table table-bordered table-sm folderPermissionTable">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Role</th>
+                                        <th class="text-center">Create</th>
+                                        <th class="text-center">Read</th>
+                                        <th class="text-center">Update</th>
+                                        <th class="text-center">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="noticeTr">
+                                        <td colspan="6">
+                                            <div class="alert alert-danger-soft show flex items-center mb-2" role="alert"><i data-lucide="alert-octagon" class="w-6 h-6 mr-2"></i> Please select employee and assign role.</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                        <button type="submit" id="updateFolderPermission" class="btn btn-primary w-auto">     
+                            Update                      
+                            <svg style="display: none;" width="25" viewBox="-2 -2 42 42" xmlns="http://www.w3.org/2000/svg"
+                                stroke="white" class="w-4 h-4 ml-2">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(1 1)" stroke-width="4">
+                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"></circle>
+                                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                                to="360 18 18" dur="1s" repeatCount="indefinite"></animateTransform>
+                                        </path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <input type="hidden" name="folder_id" value="0"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- END: Edit Folder Permission Modal -->
+
+    <!-- BEGIN: Edit Folder Modal -->
+    <div id="editFolderModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="#" id="editFolderForm" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Edit Folder</h2>
+                        <a data-tw-dismiss="modal" href="javascript:;">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label for="name" class="form-label">Folder Name <span class="text-danger">*</span></label>
+                            <input id="name" type="text" name="name" class="form-control w-full">
+                            <div class="acc__input-error error-name text-danger mt-2"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                        <button type="submit" id="updateFolder" class="btn btn-primary w-auto">     
+                            Update                      
+                            <svg style="display: none;" width="25" viewBox="-2 -2 42 42" xmlns="http://www.w3.org/2000/svg"
+                                stroke="white" class="w-4 h-4 ml-2">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(1 1)" stroke-width="4">
+                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"></circle>
+                                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                                to="360 18 18" dur="1s" repeatCount="indefinite"></animateTransform>
+                                        </path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <input type="hidden" name="folder_id" value="0"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- END: Edit Folder Modal -->
+
+
+    <!-- BEGIN: Add Folder Modal -->
+    <div id="addFolderModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog {{ $parent_id == 0 ? 'modal-xl' : '' }}">
+            <form method="POST" action="#" id="addFolderForm" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Add New Folder</h2>
+                        <a data-tw-dismiss="modal" href="javascript:;">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label for="name" class="form-label">Folder Name <span class="text-danger">*</span></label>
+                            <input id="name" type="text" name="name" class="form-control w-full">
+                            <div class="acc__input-error error-name text-danger mt-2"></div>
+                        </div>
+                        @if($parent_id == 0)
+                        <div class="permissionWrap">
+                            <div class="mt-3">
+                                <label for="employee_ids" class="form-label">Employees</label>
+                                <select name="employee_ids[]" id="employee_ids" class="w-full tom-selects" multiple>
+                                    @if(!empty($employee))
+                                        @foreach($employee as $emp)
+                                            <option value="{{ $emp->id }}">{{ $emp->full_name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                <div class="acc__input-error error-employees text-danger mt-2"></div>
+                            </div>
+                            <div class="mt-3">
+                                <table class="table table-bordered table-sm folderPermissionTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Employee</th>
+                                            <th>Role</th>
+                                            <th>Create</th>
+                                            <th>Read</th>
+                                            <th>Update</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="noticeTr">
+                                            <td colspan="6">
+                                                <div class="alert alert-danger-soft show flex items-center mb-2" role="alert"><i data-lucide="alert-octagon" class="w-6 h-6 mr-2"></i> Please select employee and assign role.</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                        <button type="submit" id="createFolder" class="btn btn-primary w-auto">     
+                            Save                      
+                            <svg style="display: none;" width="25" viewBox="-2 -2 42 42" xmlns="http://www.w3.org/2000/svg"
+                                stroke="white" class="w-4 h-4 ml-2">
+                                <g fill="none" fill-rule="evenodd">
+                                    <g transform="translate(1 1)" stroke-width="4">
+                                        <circle stroke-opacity=".5" cx="18" cy="18" r="18"></circle>
+                                        <path d="M36 18c0-9.94-8.06-18-18-18">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 18 18"
+                                                to="360 18 18" dur="1s" repeatCount="indefinite"></animateTransform>
+                                        </path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <input type="hidden" name="parent_id" value="{{ $parent_id }}"/>
+                        <input type="hidden" name="params" value="{{ $params }}"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- END: Add Folder Modal -->
+
+    <!-- BEGIN: Success Modal Content -->
+    <div id="successModal" data-tw-backdrop="static" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="p-5 text-center">
+                        <i data-lucide="check-circle" class="w-16 h-16 text-success mx-auto mt-3"></i>
+                        <div class="text-3xl mt-5 successModalTitle"></div>
+                        <div class="text-slate-500 mt-2 successModalDesc"></div>
+                    </div>
+                    <div class="px-5 pb-8 text-center">
+                        <button type="button" data-action="NONE" class="successCloser btn btn-primary w-24">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Success Modal Content -->
+
+    <!-- BEGIN: Success Modal Content -->
+    <div id="warningModal" data-tw-backdrop="static" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="p-5 text-center">
+                        <i data-lucide="octagon-alert" class="w-16 h-16 text-danger mx-auto mt-3"></i>
+                        <div class="text-3xl mt-5 sarningModalTitle"></div>
+                        <div class="text-slate-500 mt-2 warningModalDesc"></div>
+                    </div>
+                    <div class="px-5 pb-8 text-center">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-primary w-24">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Success Modal Content -->
+
+    <!-- BEGIN: Delete Confirm Modal Content -->
+    <div id="confirmModal" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="p-5 text-center">
+                        <i data-lucide="x-circle" class="w-16 h-16 text-danger mx-auto mt-3"></i>
+                        <div class="text-3xl mt-5 confModTitle">Are you sure?</div>
+                        <div class="text-slate-500 mt-2 confModDesc"></div>
+                    </div>
+                    <div class="px-5 pb-8 text-center">
+                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">No, Cancel</button>
+                        <button type="button" data-id="0" data-action="none" class="agreeWith btn btn-danger w-auto">Yes, I agree</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END: Delete Confirm Modal Content -->
+    
+@endsection
+
+@section('script')
+    @vite('resources/js/file-manager.js')
+@endsection

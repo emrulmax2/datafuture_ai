@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+use App\Http\Controllers\Controller;
+use Socialite;
+use Auth;
+use Exception;
+use App\Models\User;
+use App\Services\AuthLogService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+
+class GoogleSocialiteController extends Controller
+{
+    public function redirectToGoogle()
+    {
+        config(['services.google.redirect' => env('GOOGLE_REDIRECT_URL')]);
+        return Socialite::driver('google')->redirect();
+    }
+        /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function handleCallback()
+    {
+        try {
+            config(['services.google.redirect' => env('GOOGLE_REDIRECT_URL')]);
+            $user = Socialite::driver('google')->user();
+            
+            $finduser = User::where('social_id', $user->id)->first();
+      
+            if($finduser){
+      
+                Auth::login($finduser);
+                User::where('id', $finduser->id)->update([
+                    'last_login_ip' => request()->ip()
+                ]);
+                Cache::forever('employeeCashe'.$finduser->id, Auth::user()->load('employee'));
+                AuthLogService::logLogin($finduser->id, 'user', 'web', session()->getId(), request()->ip(), request()->userAgent(), AuthLogService::resolveExtra(request()));
+                //return redirect('/');
+                return redirect()->intended('/');
+            }else{
+                
+                $finduser = User::where('email', $user->email)->first();
+                
+                $finduser = User::find($finduser->id);
+                
+                $finduser->social_id=$user->id;
+                $finduser->social_type='google';
+                $finduser->save();
+                
+                Auth::login($finduser);
+                User::where('id', $finduser->id)->update([
+                    'last_login_ip' => request()->ip()
+                ]);
+                Cache::forever('employeeCache'.$finduser->id, Auth::user()->load('employee'));
+                AuthLogService::logLogin($finduser->id, 'user', 'web', session()->getId(), request()->ip(), request()->userAgent(), AuthLogService::resolveExtra(request()));
+                //return redirect('/');
+                return redirect()->intended('/');
+            }
+     
+        } catch (Exception $e) {
+
+             return redirect('login')->with('google', "Your email not linked with google account");  
+        }
+    }
+}

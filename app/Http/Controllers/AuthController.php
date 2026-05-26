@@ -1,0 +1,86 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Request\LoginRequest;
+use App\Http\Controllers\Controller;
+use App\Models\Option;
+use App\Models\User;
+use App\Services\AuthLogService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
+
+class AuthController extends Controller
+{
+    /**
+     * Show specified view.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function loginView(Request $request)
+    {
+        $env= env('APP_ENV');
+        return view('login.main', [
+            'layout' => 'login',
+            'env' => $env,
+            'opt' => Option::where('category', 'SITE_SETTINGS')->pluck('value', 'name')->toArray()
+        ]);
+    }
+
+    /**
+     * Authenticate login user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function login(LoginRequest $request)
+    {
+        if (!\Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password
+        ])) {
+            throw new \Exception('Wrong email or password.');
+        } else {
+            User::where('id', auth()->user()->id)->update([
+                'last_login_ip' => $request->getClientIp()
+            ]);
+            Cache::forever('employeeCache'.\Auth::user()->id, \Auth::user()->load('employee'));
+            $extra = AuthLogService::resolveExtra($request);
+            AuthLogService::logLogin(
+                auth()->user()->id,
+                'user',
+                'web',
+                session()->getId(),
+                $request->getClientIp(),
+                $request->userAgent(),
+                $extra
+            );
+
+            $redirect = session()->pull('url.intended');
+            if ($redirect && Str::startsWith($redirect, '/')):
+                session()->forget('url.intended');
+                return response()->json(['redirect' => $redirect]);
+            endif;
+
+            return response()->json(['redirect' => '/dashboard']);
+        }
+    }
+
+    /**
+     * Logout user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout()
+    {
+        if (\Auth::check()) {
+            AuthLogService::logLogout(auth()->user()->id, 'user', AuthLogService::REASON_MANUAL);
+        }
+        \Auth::logout();
+        Cache::flush();
+        return redirect('login');
+    }
+}

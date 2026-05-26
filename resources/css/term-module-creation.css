@@ -1,0 +1,26 @@
+/*
+                Created on : Jan 29, 2021, 10:20:08 PM
+                Author     : Sakib Bhuiyan
+*/
+.form-wizard-steps li.active button,
+.form-wizard-steps li.activated button{
+    --tw-border-opacity: 1;
+    border-color: rgb(var(--color-primary) / var(--tw-border-opacity));
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--color-primary) / var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+.form-wizard-steps li.active div,
+.form-wizard-steps li.activated div{
+    font-weight: 500 !important;
+}
+.form-wizard .wizard-fieldset {
+    display: none;
+}
+.form-wizard .wizard-fieldset.show {
+    display: block;
+}
+.wizard-form-error{
+    display: none;
+}
