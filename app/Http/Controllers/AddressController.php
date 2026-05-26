@@ -12,6 +12,7 @@ class AddressController extends Controller
         $address = Address::find($request->address_id);
 
         return response()->json(['res' => $address], 200);
+        
     }
 
     public function store(AddressRequest $request){
