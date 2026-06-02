@@ -312,6 +312,10 @@
         font-weight: 700 !important;
         line-height: 1.1;
     }
+
+    .hr-top-nav .nav-clockin-statistics .statusArea .text-red-800 {
+        color: rgb(var(--color-danger)) !important;
+    }
 }
 
 /* Primary actions follow the top-bar gradient language */
