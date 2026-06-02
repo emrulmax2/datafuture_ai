@@ -8,7 +8,7 @@
     @include('../layout/components/mobile-menu')
     @include('../layout/components/top-bar', ['class' => 'top-bar-boxed--top-menu'])
     <!-- BEGIN: Top Menu -->
-    <nav class="top-nav flex">
+    <nav class="top-nav hr-top-nav flex">
         <ul>
             @foreach ($top_menu as $menuKey => $menu)
             

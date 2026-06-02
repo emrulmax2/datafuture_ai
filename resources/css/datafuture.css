@@ -55,39 +55,193 @@
 
 /* ── Global Navigation Redesign ── */
 @media (min-width: 768px) {
+    body {
+        background:
+            radial-gradient(1200px 560px at 90% -8%, rgba(21, 86, 77, 0.08), transparent 60%),
+            radial-gradient(850px 460px at -5% 110%, rgba(140, 43, 43, 0.05), transparent 55%),
+            #f3efe7;
+    }
+
+    .content.content--top-nav {
+        background: transparent;
+    }
+
+    /* Top bar: dark pine gradient with gold accent line */
+    .top-bar-boxed.hr-topbar {
+        background: linear-gradient(105deg, #0e3d37 0%, #15564d 55%, #1c6c61 100%) !important;
+        border-bottom: 3px solid #b88a3d !important;
+        box-shadow: 0 8px 18px -14px rgba(14, 61, 55, 0.8);
+        position: relative;
+        overflow: hidden;
+    }
+    .top-bar-boxed.hr-topbar::before {
+        display: none !important;
+    }
+    .top-bar-boxed.hr-topbar::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(620px 210px at 82% 0%, rgba(255, 255, 255, 0.12), transparent 70%);
+        z-index: 0;
+    }
+    .top-bar-boxed.hr-topbar > div {
+        position: relative;
+        z-index: 1;
+    }
+
+    .top-bar-boxed.hr-topbar .logo.college-identity {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.85rem;
+        margin-right: 1.35rem;
+        padding-right: 1.25rem;
+        border-right: 1px solid rgba(255, 255, 255, 0.17);
+    }
+    .top-bar-boxed.hr-topbar .logo.college-identity .logo__image {
+        height: 2.85rem;
+        width: auto;
+        filter: saturate(0.92) contrast(1.05);
+    }
+    .top-bar-boxed.hr-topbar .college-identity__text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+    }
+    .top-bar-boxed.hr-topbar .college-identity__line {
+        font-family: "Georgia", "Times New Roman", serif;
+        font-size: 0.82rem;
+        letter-spacing: 0.18em;
+        color: #fbf7ee;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .top-bar-boxed.hr-topbar .college-identity__line--gold {
+        color: #c8a84b;
+        letter-spacing: 0.28em;
+        font-size: 0.63rem;
+        margin-top: 0.15rem;
+    }
+
+    .top-bar-boxed.hr-topbar .breadcrumb,
+    .top-bar-boxed.hr-topbar .breadcrumb .breadcrumb-item a {
+        color: rgba(255, 255, 255, 0.72) !important;
+    }
+    .top-bar-boxed.hr-topbar .breadcrumb .breadcrumb-item.active,
+    .top-bar-boxed.hr-topbar .breadcrumb .breadcrumb-item.active a {
+        color: #ffffff !important;
+        font-weight: 600;
+    }
+    .top-bar-boxed.hr-topbar .breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+        color: rgba(255, 255, 255, 0.45) !important;
+    }
+
+    /* Profile button on right side */
+    .top-bar-boxed.hr-topbar .account-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.32rem 0.32rem 0.32rem 0.95rem;
+        border-radius: 9999px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+    .top-bar-boxed.hr-topbar .account-pill__who {
+        line-height: 1.05;
+        text-align: right;
+        max-width: 240px;
+    }
+    .top-bar-boxed.hr-topbar .account-pill__name {
+        font-size: 0.76rem;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .top-bar-boxed.hr-topbar .account-pill__role {
+        margin-top: 0.18rem;
+        font-size: 0.64rem;
+        color: rgba(255, 255, 255, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 600;
+    }
+    .top-bar-boxed.hr-topbar .account-pill__avatar {
+        width: 2.35rem;
+        height: 2.35rem;
+        border-radius: 9999px;
+        overflow: hidden;
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.26);
+    }
+
     /* White card nav bar sitting below the dark top bar */
-    .top-nav > ul {
+    .hr-top-nav > ul {
         background: #ffffff;
         border-bottom: 1px solid #e2e8f0;
         box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
+        border-radius: 0;
     }
 
     /* Active nav item: clean bottom-border underline, no SVG chevron */
-    .top-nav > ul > li > .top-menu--active {
+    .hr-top-nav > ul > li > .top-menu--active {
         background: transparent !important;
         border-bottom: 3px solid rgb(var(--color-primary)) !important;
         border-radius: 0 !important;
         margin-bottom: -1px;
     }
     /* Hide the decorative pseudo-elements on active items */
-    .top-nav > ul > li > .top-menu--active::before,
-    .top-nav > ul > li > .top-menu--active::after {
+    .hr-top-nav > ul > li > .top-menu--active::before,
+    .hr-top-nav > ul > li > .top-menu--active::after {
         display: none !important;
     }
     /* Active item text colour */
-    .top-nav > ul > li > .top-menu--active .top-menu__icon,
-    .top-nav > ul > li > .top-menu--active .top-menu__title {
+    .hr-top-nav > ul > li > .top-menu--active .top-menu__icon,
+    .hr-top-nav > ul > li > .top-menu--active .top-menu__title {
         color: rgb(var(--color-primary)) !important;
         font-weight: 600;
     }
     /* Hover state: subtle tint instead of the bg-slate-100 box */
-    .top-nav > ul > li:hover > .top-menu:not(.top-menu--active) {
+    .hr-top-nav > ul > li:hover > .top-menu:not(.top-menu--active) {
         background: rgba(var(--color-primary), 0.06) !important;
         border-radius: 0.5rem;
     }
-    .top-nav > ul > li:hover > .top-menu:not(.top-menu--active)::before {
+    .hr-top-nav > ul > li:hover > .top-menu:not(.top-menu--active)::before {
         display: none !important;
     }
+
+    .hr-top-nav > ul li .top-menu {
+        color: #5d6562;
+    }
+
+    .hr-top-nav > ul li ul,
+    .hr-top-nav > ul li ul ul {
+        background: #ffffff;
+    }
+}
+
+/* Primary actions follow the top-bar gradient language */
+.btn.btn-primary,
+.btn-primary,
+.btn.btn-go {
+    background: linear-gradient(105deg, #0f3d36 0%, #15564d 58%, #1c6c61 100%) !important;
+    border-color: #114941 !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 16px -10px rgba(14, 61, 55, 0.72);
+}
+
+.btn.btn-primary:hover,
+.btn-primary:hover,
+.btn.btn-go:hover {
+    background: linear-gradient(105deg, #0b312c 0%, #114941 58%, #16584f 100%) !important;
+    border-color: #0f3d36 !important;
+    color: #ffffff !important;
+}
+
+.btn.btn-primary:focus,
+.btn-primary:focus,
+.btn.btn-go:focus {
+    box-shadow: 0 0 0 0.24rem rgba(21, 86, 77, 0.24), 0 8px 16px -10px rgba(14, 61, 55, 0.72) !important;
 }
 
 .modal-alert{
