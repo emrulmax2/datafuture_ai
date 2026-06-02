@@ -104,7 +104,7 @@
         filter: saturate(0.92) contrast(1.05);
     }
     .top-bar-boxed.hr-topbar .college-identity__text {
-        display: flex;
+        display: none;
         flex-direction: column;
         line-height: 1;
     }
