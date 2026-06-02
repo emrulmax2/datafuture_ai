@@ -82,7 +82,7 @@
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: radial-gradient(620px 210px at 82% 0%, rgba(255, 255, 255, 0.12), transparent 70%);
+        background: radial-gradient(620px 210px at 82% 0%, rgba(255, 255, 255, 0.12), transparent 20%);
         z-index: 0;
     }
     .top-bar-boxed.hr-topbar > div {
