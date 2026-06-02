@@ -30,12 +30,14 @@ class AttendanceLiveStatsService
             : 0;
 
         $lastActionLabel = '';
+        $lastActionClass = '';
         switch ($lastAction) {
             case 1:
                 $lastActionLabel = 'Working';
                 break;
             case 2:
                 $lastActionLabel = 'Break';
+                $lastActionClass = ' text-red-800';
                 break;
             case 3:
                 $lastActionLabel = 'Working';
@@ -68,7 +70,7 @@ class AttendanceLiveStatsService
             $html .= '<div class="clockinStatistics inline-flex justify-end items-start ml-auto">';
             $html .= '<div class="statusArea">';
             $html .= '<div class="text-slate-500 text-xs whitespace-nowrap uppercase">Status</div>';
-            $html .= '<div class="font-medium whitespace-nowrap uppercase">' . $lastActionLabel . '</div>';
+            $html .= '<div class="font-medium whitespace-nowrap uppercase' . $lastActionClass . '">' . $lastActionLabel . '</div>';
             $html .= '</div>';
             $html .= '<div class="sinceArea">';
             $html .= '<div class="text-slate-500 text-xs whitespace-nowrap uppercase">since</div>';
