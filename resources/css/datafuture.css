@@ -53,6 +53,42 @@
 }
 /* Core Setup Extended End */
 
+/* ── Global Navigation Redesign ── */
+@media (min-width: 768px) {
+    /* White card nav bar sitting below the dark top bar */
+    .top-nav > ul {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    /* Active nav item: clean bottom-border underline, no SVG chevron */
+    .top-nav > ul > li > .top-menu--active {
+        background: transparent !important;
+        border-bottom: 3px solid rgb(var(--color-primary)) !important;
+        border-radius: 0 !important;
+        margin-bottom: -1px;
+    }
+    /* Hide the decorative pseudo-elements on active items */
+    .top-nav > ul > li > .top-menu--active::before,
+    .top-nav > ul > li > .top-menu--active::after {
+        display: none !important;
+    }
+    /* Active item text colour */
+    .top-nav > ul > li > .top-menu--active .top-menu__icon,
+    .top-nav > ul > li > .top-menu--active .top-menu__title {
+        color: rgb(var(--color-primary)) !important;
+        font-weight: 600;
+    }
+    /* Hover state: subtle tint instead of the bg-slate-100 box */
+    .top-nav > ul > li:hover > .top-menu:not(.top-menu--active) {
+        background: rgba(var(--color-primary), 0.06) !important;
+        border-radius: 0.5rem;
+    }
+    .top-nav > ul > li:hover > .top-menu:not(.top-menu--active)::before {
+        display: none !important;
+    }
+}
 
 .modal-alert{
     display: none;
