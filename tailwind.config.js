@@ -50,6 +50,7 @@ module.exports = {
                     neutral: colors.neutral,
                     gray: colors.gray,
                     slate: colors.slate,
+                    cream: '#faf8f4', // custom name
                 }),
                 primary: withOpacityValue('--color-primary'),
                 secondary: withOpacityValue('--color-secondary'),
