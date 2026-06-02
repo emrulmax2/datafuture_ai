@@ -218,6 +218,64 @@
     .hr-top-nav > ul li ul ul {
         background: #ffffff;
     }
+
+    /* Right-side status summary in top navigation */
+    .hr-top-nav {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .hr-top-nav > ul {
+        flex: 1 1 auto;
+    }
+
+    .hr-top-nav .nav-clockin-statistics {
+        margin-left: auto;
+        margin-right: 1.25rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.9rem;
+        background: #ffffff;
+        border: 1px solid rgba(21, 86, 77, 0.12);
+        border-radius: 12px;
+        padding: 0.45rem 0.8rem;
+        box-shadow: 0 2px 8px rgba(14, 61, 55, 0.08);
+    }
+
+    .hr-top-nav .nav-clockin-statistics .statusArea,
+    .hr-top-nav .nav-clockin-statistics .sinceArea {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: max-content;
+    }
+
+    .hr-top-nav .nav-clockin-statistics .sinceArea {
+        margin-left: 0;
+        padding-left: 0.9rem;
+        border-left: 1px solid #e2e8f0;
+    }
+
+    .hr-top-nav .nav-clockin-statistics .statusArea > :first-child,
+    .hr-top-nav .nav-clockin-statistics .sinceArea > :first-child,
+    .hr-top-nav .nav-clockin-statistics .sinceArea > :last-child {
+        color: #6b7280 !important;
+        font-size: 0.65rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        line-height: 1.15;
+    }
+
+    .hr-top-nav .nav-clockin-statistics .statusArea > :nth-child(2),
+    .hr-top-nav .nav-clockin-statistics .sinceArea > :nth-child(2) {
+        margin-top: 0.15rem;
+        color: #15564d !important;
+        font-size: 0.82rem !important;
+        font-weight: 700 !important;
+        line-height: 1.1;
+    }
 }
 
 /* Primary actions follow the top-bar gradient language */

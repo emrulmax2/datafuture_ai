@@ -61,7 +61,9 @@
             @endforeach
         </ul> 
         @if(Auth::user() && Route::currentRouteName() == 'dashboard' && !empty($home_work_statistics) && ((!in_array(auth()->user()->last_login_ip, $venue_ips) && isset($home_work) && $home_work) || (in_array(auth()->user()->last_login_ip, $venue_ips) && isset($desktop_login) && $desktop_login)))
-            {!! $home_work_statistics !!}
+            <div class="clockinStatistics nav-clockin-statistics" aria-label="Work status summary">
+                {!! $home_work_statistics !!}
+            </div>
             {{--<div class="clockinStatistics inline-flex justify-end items-start ml-auto">
                 <div class="statusArea">
                     <div class="text-slate-500 text-xs whitespace-nowrap uppercase">Status</div>
