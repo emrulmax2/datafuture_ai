@@ -67,6 +67,7 @@ class AttendanceLiveStatsService
                 : strtotime(date('H:i:s'));
             $durationSeconds = $rtime * 1000;
 
+            
             $html .= '<div class="clockinStatistics inline-flex justify-end items-start ml-auto">';
             $html .= '<div class="statusArea">';
             $html .= '<div class="text-slate-500 text-xs whitespace-nowrap uppercase">Status</div>';
