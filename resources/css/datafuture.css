@@ -284,7 +284,7 @@
         min-width: max-content;
         
     }
-    .hr-top-nav .nav-clockin-statistics .statusArea
+    .hr-top-nav .nav-clockin-statistics .statusArea {
         padding-right: 1rem;
     }
     .hr-top-nav .nav-clockin-statistics .sinceArea {
