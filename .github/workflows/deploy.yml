@@ -30,13 +30,52 @@ jobs:
       run: pnpm run build
 
     - name: Setup SSH
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
+        SSH_HOST: ${{ secrets.SSH_HOST }}
       run: |
-        mkdir -p ~/.ssh/
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+        set -eu
+
+        if [ -z "${SSH_PRIVATE_KEY:-}" ]; then
+          echo "::error::SSH_PRIVATE_KEY secret is missing or empty."
+          exit 1
+        fi
+
+        if [ -z "${SSH_HOST:-}" ]; then
+          echo "::error::SSH_HOST secret is missing or empty."
+          exit 1
+        fi
+
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
+
+        # Preserve multiline private key and strip CRLF if pasted from Windows.
+        printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa.pub
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+        if [ -n "${SSH_PUBLIC_KEY:-}" ]; then
+          printf '%s\n' "$SSH_PUBLIC_KEY" | tr -d '\r' > ~/.ssh/id_rsa.pub
+          chmod 600 ~/.ssh/id_rsa.pub
+        fi
+
+        # Normalize host in case protocol/path was accidentally included.
+        host="$SSH_HOST"
+        host="${host#ssh://}"
+        host="${host#https://}"
+        host="${host#http://}"
+        host="${host%%/*}"
+
+        if [ -z "$host" ]; then
+          echo "::error::SSH_HOST is invalid after normalization."
+          exit 1
+        fi
+
+        ssh-keyscan -H "$host" >> ~/.ssh/known_hosts 2>/dev/null || {
+          echo "::error::ssh-keyscan failed for SSH_HOST='$host'. Verify the host/IP and network access from GitHub Actions."
+          exit 1
+        }
+        chmod 644 ~/.ssh/known_hosts
 
     - name: Upload built assets
       run: |
