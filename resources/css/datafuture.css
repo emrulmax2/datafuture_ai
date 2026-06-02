@@ -177,9 +177,9 @@
 
     /* White card nav bar sitting below the dark top bar */
     .hr-top-nav > ul {
-        background: #ffffff;
+        /* background: #ffffff;
         border-bottom: 1px solid #e2e8f0;
-        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06);
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06); */
         border-radius: 0;
     }
 
@@ -312,19 +312,19 @@
 }
 
 /* Primary actions follow the top-bar gradient language */
-.btn.btn-primary,
-.btn-primary,
+.btn.btn-primary, 
+.btn-primary, 
 .btn.btn-go {
-    background: linear-gradient(105deg, #0f3d36 0%, #15564d 58%, #1c6c61 100%) !important;
-    border-color: #114941 !important;
-    color: #ffffff !important;
-    box-shadow: 0 8px 16px -10px rgba(14, 61, 55, 0.72);
+    background: linear-gradient(260deg, #11544a 0%, #0c665a 50%, #1c6c61 80%) !important;
+    border-color: #246259 !important;
+    color: #fff !important;
+    box-shadow: 0 8px 16px -10px #0e3d37b8;
 }
 
 .btn.btn-primary:hover,
 .btn-primary:hover,
 .btn.btn-go:hover {
-    background: linear-gradient(105deg, #0b312c 0%, #114941 58%, #16584f 100%) !important;
+    background: linear-gradient(260deg, #11544a 0%, #0c665a 50%, #1c6c61 80%) !important;
     border-color: #0f3d36 !important;
     color: #ffffff !important;
 }
