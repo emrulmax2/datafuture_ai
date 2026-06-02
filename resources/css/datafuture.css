@@ -282,12 +282,16 @@
         flex-direction: column;
         justify-content: center;
         min-width: max-content;
+        
     }
-
+    .hr-top-nav .nav-clockin-statistics .statusArea
+        padding-right: 1rem;
+    }
     .hr-top-nav .nav-clockin-statistics .sinceArea {
         margin-left: 0;
         padding-left: 0.9rem;
         border-left: 1px solid #e2e8f0;
+        
     }
 
     .hr-top-nav .nav-clockin-statistics .statusArea > :first-child,
