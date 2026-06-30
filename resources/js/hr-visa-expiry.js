@@ -70,8 +70,8 @@ var visaExpiryListTable = (function () {
                     formatter(cell, formatterParams) {                        
                         var btns = "";
 
-                        btns += '<button data-id="' +cell.getData().id +'" data-tw-toggle="modal" data-tw-target="#sendVisaExpireMailModal" type="button" class="edit_btn btn-rounded btn btn-success text-white p-0 w-9 h-9 ml-1"><i data-lucide="mail-check" class="w-4 h-4"></i></button>';
-                        btns += '<button data-id="' +cell.getData().id +'" data-tw-toggle="modal" data-tw-target="#viewVisaExpireMailsModal" class="delete_btn btn btn-facebook text-white btn-rounded ml-1 p-0 w-9 h-9"><i data-lucide="list-ordered" class="w-4 h-4"></i></button>';
+                        btns += '<button data-id="' +cell.getData().id +'" data-tw-toggle="modal" data-tw-target="#sendVisaExpireMailModal" type="button" title="Send reminder email" class="edit_btn inline-flex items-center justify-center w-9 h-9 rounded-lg bg-soft text-soft-text hover:bg-primary hover:text-white transition-colors ml-1"><i data-lucide="mail-check" class="w-4 h-4"></i></button>';
+                        btns += '<button data-id="' +cell.getData().id +'" data-tw-toggle="modal" data-tw-target="#viewVisaExpireMailsModal" title="View sent emails" class="delete_btn inline-flex items-center justify-center w-9 h-9 rounded-lg border border-slate-200 text-slate-500 hover:text-primary hover:border-primary transition-colors ml-1"><i data-lucide="list-ordered" class="w-4 h-4"></i></button>';
                         
                         return btns;
                     },
