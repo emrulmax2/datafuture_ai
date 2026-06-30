@@ -318,28 +318,54 @@
     }
 }
 
-/* Primary actions — "Slate & Teal" preset */
+/* Primary actions — "Slate & Teal" FLAT preset (no gradient, no glow) */
 .btn.btn-primary,
 .btn-primary,
 .btn.btn-go {
-    background: linear-gradient(180deg, #0e7c86 0%, #0b6670 100%) !important;
-    border-color: #0b6670 !important;
+    background: #0e7c86 !important;
+    background-image: none !important;
+    border: 1px solid #0e7c86 !important;
     color: #fff !important;
-    box-shadow: 0 8px 16px -10px rgba(11, 102, 112, 0.7);
+    box-shadow: none !important;
 }
 
 .btn.btn-primary:hover,
 .btn-primary:hover,
-.btn.btn-go:hover {
-    background: linear-gradient(180deg, #0b6670 0%, #095863 100%) !important;
-    border-color: #095863 !important;
+.btn.btn-go:hover,
+.btn.btn-primary:active,
+.btn-primary:active,
+.btn.btn-go:active {
+    background: #0b6670 !important;
+    background-image: none !important;
+    border-color: #0b6670 !important;
     color: #ffffff !important;
+    box-shadow: none !important;
 }
 
 .btn.btn-primary:focus,
 .btn-primary:focus,
-.btn.btn-go:focus {
-    box-shadow: 0 0 0 0.24rem rgba(14, 124, 134, 0.24), 0 8px 16px -10px rgba(11, 102, 112, 0.7) !important;
+.btn.btn-go:focus,
+.btn.btn-primary:focus-visible,
+.btn-primary:focus-visible,
+.btn.btn-go:focus-visible {
+    background-image: none !important;
+    box-shadow: 0 0 0 0.2rem rgba(14, 124, 134, 0.20) !important;
+}
+
+/* Dark mode keeps the buttons flat but tracks the brighter dark teal token */
+.dark .btn.btn-primary,
+.dark .btn-primary,
+.dark .btn.btn-go {
+    background: #0d9488 !important;
+    background-image: none !important;
+    border-color: #0d9488 !important;
+}
+.dark .btn.btn-primary:hover,
+.dark .btn-primary:hover,
+.dark .btn.btn-go:hover {
+    background: #0f766e !important;
+    background-image: none !important;
+    border-color: #0f766e !important;
 }
 
 /* Accent (gold) outline action — e.g. "Add Temp Employee" */
@@ -399,40 +425,266 @@ body {
     font-feature-settings: "liga" 1, "kern" 1;
 }
 
-/* ── HR report tables — match the "Slate & Teal" surface tokens ──
-   Clean white rows (no zebra), hairline dividers, tinted header, teal active page.
-   Scoped to .table-report--tabulator so only the HR/report tables are affected;
-   light-surface colours guarded by html:not(.dark) to preserve dark mode. */
+/* ════════════════════════════════════════════════════════════════════════
+   HR / report tables — custom "Slate & Teal" design.
+   Fully replaces the Tabulator + Midone component defaults for any table with
+   the .table-report--tabulator wrapper (employee/visa/passport/appraisal/
+   vacancy/holiday/course/plan/etc). Clean white rows (no zebra), hairline
+   #E7E9E6 dividers, tinted #F6F8F5 header with uppercase muted labels, teal
+   sort arrows + active page. Scoped via .table-report--tabulator so the look
+   never leaks to unrelated tables; light surfaces guarded with html:not(.dark)
+   and dark variants restated under .dark.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* ---- Container ---- */
+.table-report--tabulator .tabulator {
+    border: 0;
+    background: transparent;
+    font-size: 14px;
+    text-align: left;
+}
+
+/* ───────────────────── LIGHT MODE ───────────────────── */
+
+/* Header row */
 html:not(.dark) .table-report--tabulator .tabulator .tabulator-header {
     background: #F6F8F5;
     border-top: 0;
     border-bottom: 1px solid #E7E9E6;
+    color: #7A847D;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-header .tabulator-col,
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-header .tabulator-headers .tabulator-col {
+    background: transparent;
+    background-color: transparent;
+    border-right: 0;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-header .tabulator-headers .tabulator-col:hover,
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover {
+    background: transparent;
+    background-color: transparent;
+}
+.table-report--tabulator .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
+    padding: 0.65rem 0.85rem;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
 }
 html:not(.dark) .table-report--tabulator .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
     text-transform: uppercase;
-    font-size: 0.6875rem;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.06em;
     color: #7A847D;
+    text-align: left;
+    padding-right: 0;
 }
+/* defeat the legacy nth-child(3..6) center-align rule from _table-report.css */
+html:not(.dark) .table-report.table-report--tabulator .tabulator-header .tabulator-headers .tabulator-col:nth-child(3) .tabulator-col-content .tabulator-col-title,
+html:not(.dark) .table-report.table-report--tabulator .tabulator-header .tabulator-headers .tabulator-col:nth-child(4) .tabulator-col-content .tabulator-col-title,
+html:not(.dark) .table-report.table-report--tabulator .tabulator-header .tabulator-headers .tabulator-col:nth-child(5) .tabulator-col-content .tabulator-col-title,
+html:not(.dark) .table-report.table-report--tabulator .tabulator-header .tabulator-headers .tabulator-col:nth-child(6) .tabulator-col-content .tabulator-col-title {
+    text-align: left;
+}
+
+/* Sort arrows — muted by default, teal when active (descendant path; matches
+   the Midone component's own .tabulator-col-content .tabulator-arrow rule) */
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow {
+    border-bottom-color: #7A847D;
+    border-top-color: #7A847D;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-arrow {
+    border-top: none;
+    border-bottom: 6px solid #C7CEC9 !important;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-arrow {
+    border-top: none;
+    border-bottom: 6px solid #0E7C86 !important;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow {
+    border-bottom: none;
+    border-top: 6px solid #0E7C86 !important;
+}
+
+/* Body rows — white, NO zebra, hairline divider, soft hover */
 html:not(.dark) .table-report--tabulator .tabulator .tabulator-row,
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-row.tabulator-row-odd,
 html:not(.dark) .table-report--tabulator .tabulator .tabulator-row.tabulator-row-even {
     background: #FFFFFF;
+    background-color: #FFFFFF;
     border-bottom: 1px solid #E7E9E6;
+    transition: background 120ms ease;
 }
 html:not(.dark) .table-report--tabulator .tabulator .tabulator-row:hover,
-html:not(.dark) .table-report--tabulator .tabulator .tabulator-row.tabulator-row-even:hover {
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-row.tabulator-row-even:hover,
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-row.tabulator-row-odd:hover {
     background: #F6F8F5;
+    background-color: #F6F8F5;
+    cursor: pointer;
 }
-.table-report--tabulator .tabulator .tabulator-row .tabulator-cell {
-    padding-top: 0.8rem;
-    padding-bottom: 0.8rem;
+
+/* Cells */
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-row .tabulator-cell {
+    padding: 0.85rem;
+    border-right: 0;
+    vertical-align: middle;
+    color: #3C463F;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
 }
-.table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page.active,
-.table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page.active:hover {
-    background: rgb(var(--color-primary));
+
+/* Name/identity cell uses the column formatter's own markup; avatar + name +
+   role render via the formatter. (No utility-class targeting here — Tailwind's
+   @apply engine rejects rules that redefine utilities like .relative/.block.) */
+
+/* Footer / pagination */
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-footer {
+    background: #FFFFFF;
+    border-top: 1px solid #E7E9E6;
+    padding: 0.65rem 0.85rem;
+    margin-top: 0;
+    text-align: left;
+    color: #7A847D;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator,
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator > label {
+    color: #7A847D;
+    font-size: 13px;
+    font-weight: 400;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page-size {
+    background-color: #FFFFFF;
+    border: 1px solid #E7E9E6;
+    border-radius: 8px;
+    height: 32px;
+    color: #3C463F;
+    font-size: 13px;
+    padding: 0 1.9rem 0 0.6rem;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page-size:focus {
+    outline: none;
+    border-color: #0E7C86;
+    box-shadow: 0 0 0 0.18rem rgba(14, 124, 134, 0.18);
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page {
+    background: transparent;
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+    color: #3C463F;
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 4px 10px;
+    min-width: 32px;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page:hover {
+    background: #F6F8F5;
+    background-color: #F6F8F5;
+    color: #3C463F;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page.active,
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page.active:hover {
+    background: #0E7C86 !important;
+    background-color: #0E7C86 !important;
+    color: #FFFFFF !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    font-weight: 600;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page:disabled {
+    opacity: 0.5;
+    color: #7A847D;
+}
+
+/* Placeholder (empty state) + loader */
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-tableHolder .tabulator-placeholder span {
+    color: #7A847D;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 2.5rem 0;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-loader {
+    background: rgba(255, 255, 255, 0.74);
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-loader .tabulator-loader-msg {
+    background: transparent;
+    color: #3C463F;
+    font-weight: 400;
+}
+
+/* ───────────────────── DARK MODE ───────────────────── */
+.dark .table-report--tabulator .tabulator .tabulator-header {
+    background: transparent;
+    border-top: 0;
+    border-bottom: 1px solid #2d3748;
+}
+.dark .table-report--tabulator .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #94a3b8;
+}
+.dark .table-report--tabulator .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow {
+    border-bottom-color: #94a3b8;
+    border-top-color: #94a3b8;
+}
+.dark .table-report--tabulator .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-arrow {
+    border-top: none;
+    border-bottom: 6px solid #475569 !important;
+}
+.dark .table-report--tabulator .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-arrow {
+    border-top: none;
+    border-bottom: 6px solid #0E7C86 !important;
+}
+.dark .table-report--tabulator .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow {
+    border-bottom: none;
+    border-top: 6px solid #0E7C86 !important;
+}
+.dark .table-report--tabulator .tabulator .tabulator-row,
+.dark .table-report--tabulator .tabulator .tabulator-table .tabulator-row,
+.dark .table-report--tabulator .tabulator .tabulator-table .tabulator-row.tabulator-row-even {
+    background: transparent;
+    background-color: transparent;
+    border-bottom: 1px solid #2d3748;
+}
+.dark .table-report--tabulator .tabulator .tabulator-table .tabulator-row:hover,
+.dark .table-report--tabulator .tabulator .tabulator-table .tabulator-row.tabulator-row-even:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+.dark .table-report--tabulator .tabulator .tabulator-row .tabulator-cell {
+    color: #e2e8f0;
+}
+.dark .table-report--tabulator .tabulator .tabulator-footer,
+.dark .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator,
+.dark .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator > label {
+    background: transparent;
+    border-top: 1px solid #2d3748;
+    color: #94a3b8;
+}
+.dark .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page {
+    color: #e2e8f0;
+}
+.dark .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page:hover {
+    background-color: rgba(255, 255, 255, 0.06);
     color: #fff;
-    border-color: rgb(var(--color-primary));
+}
+.dark .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page.active,
+.dark .table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page.active:hover {
+    background-color: #0d9488 !important;
+    color: #fff !important;
+    border: 0 !important;
+}
+.dark .table-report--tabulator .tabulator .tabulator-tableHolder .tabulator-placeholder span {
+    color: #94a3b8;
+}
+.dark .table-report--tabulator .tabulator .tabulator-loader {
+    background: rgba(15, 23, 42, 0.55);
+}
+.dark .table-report--tabulator .tabulator .tabulator-loader .tabulator-loader-msg {
+    background: transparent;
+    color: #e2e8f0;
 }
 
 .modal-alert{
@@ -442,10 +694,8 @@ html:not(.dark) .table-report--tabulator .tabulator .tabulator-row.tabulator-row
     border-radius: 0;
 }
 
-.tabulator#courseCreationInstTable .tabulator-row:hover, .tabulator#courseCreationInstTable .tabulator-row.tabulator-row-even:hover, 
-.tabulator#courseCreationInstTable .tabulator-row.tabulator-row-even{
-    background-color: #fff;
-}
+/* (Removed legacy #courseCreationInstTable white-row/no-hover override — it now
+   shares .table-report--tabulator and is styled uniformly by the custom design.) */
 
 .singleModule{
     position: relative;
