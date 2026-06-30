@@ -8,7 +8,7 @@
     <div class="grid grid-cols-12 gap-6">
         
         <!-- BEGIN: Breadcrumb -->
-        <nav class="intro-y mt-8" aria-label="breadcrumb">
+        <nav class="intro-y mt-8 col-span-12" aria-label="breadcrumb">
             <ol class="flex items-center flex-wrap gap-1.5 text-sm text-slate-400">
                 <li><a href="javascript:void(0);" class="hover:text-primary transition-colors">User</a></li>
                 <li class="text-slate-300 dark:text-darkmode-300">&rsaquo;</li>
@@ -20,7 +20,7 @@
         <!-- END: Breadcrumb -->
 
         <!-- BEGIN: Dashboard Header -->
-        <div class="intro-y flex flex-wrap items-center justify-between gap-3 mt-2 mb-2">
+        <div class="intro-y flex flex-wrap items-center justify-between gap-3 mt-2 mb-2 col-span-12">
             <div>
                 <h2 class="font-display text-3xl font-semibold text-slate-800 dark:text-white leading-tight tracking-tight">HR Dashboard</h2>
                 <p class="text-sm text-slate-400 mt-1">Workforce overview &middot; London Churchill College</p>
