@@ -55,7 +55,8 @@ var passportExpiryListTable = (function () {
                     hozAlign: "center",
                     headerHozAlign: "center",
                     formatter(cell, formatterParams){
-                        return '<span class="btn inline-flex '+cell.getData().class+' w-auto px-1 text-white py-0 rounded-0">'+cell.getData().days+(cell.getData().days == 1 ? ' Day' : ' Days')+'</span>';
+                        var tone = (cell.getData().class || '').indexOf('danger') > -1 ? 'lcc-badge--critical' : 'lcc-badge--warning';
+                        return '<span class="lcc-badge '+tone+' has-dot">'+cell.getData().days+(cell.getData().days == 1 ? ' Day' : ' Days')+'</span>';
                     }
                 },
                 {

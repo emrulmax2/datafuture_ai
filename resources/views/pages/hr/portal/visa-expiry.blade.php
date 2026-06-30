@@ -4,22 +4,33 @@
     <title>{{ $title }}</title>
 @endsection
 @section('subcontent')
-    <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
-        <h2 class="text-lg font-medium mr-auto">Visa Expiry Report</h2>
-        <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a href="{{ route('hr.portal') }}" class="add_btn btn btn-primary shadow-md mr-2">Back to Portal</a>
+    <!-- BEGIN: Page Header -->
+    <div class="intro-y flex flex-wrap items-center justify-between gap-3 mt-8 mb-2">
+        <div>
+            <h2 class="text-xl font-semibold text-slate-800 dark:text-white leading-tight">Visa Expiry Report</h2>
+            <p class="text-sm text-slate-400 mt-1">Work-permit &amp; visa renewals &middot; London Churchill College</p>
         </div>
+        <a href="{{ route('hr.portal') }}" class="flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Portal
+        </a>
     </div>
+    <!-- END: Page Header -->
+
     <!-- BEGIN: HTML Table Data -->
-    <div class="intro-y box p-5 mt-5">
-        <div class="flex flex-col sm:flex-row sm:items-end xl:items-start">
-            <div class="flex mt-5 sm:mt-0">
-                <button id="tabulator-print" class="btn btn-outline-secondary w-1/2 sm:w-auto mr-2">
-                    <i data-lucide="printer" class="w-4 h-4 mr-2"></i> Print
+    <div class="intro-y box mt-5">
+        <!-- Toolbar -->
+        <div class="flex flex-col xl:flex-row xl:items-center gap-4 px-5 py-4 border-b border-slate-100 dark:border-darkmode-400">
+            <div class="mr-auto">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Report</div>
+                <div class="text-sm font-semibold text-slate-600 dark:text-slate-300 mt-0.5">Visa &amp; work-permit expiry</div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button id="tabulator-print" class="btn btn-outline-secondary h-[42px] text-sm">
+                    <i data-lucide="printer" class="w-4 h-4 mr-1.5"></i> Print
                 </button>
-                <div class="dropdown w-1/2 sm:w-auto">
-                    <button class="dropdown-toggle btn btn-outline-secondary w-full sm:w-auto" aria-expanded="false" data-tw-toggle="dropdown">
-                        <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export <i data-lucide="chevron-down" class="w-4 h-4 ml-auto sm:ml-2"></i>
+                <div class="dropdown">
+                    <button class="dropdown-toggle btn btn-outline-secondary h-[42px] text-sm" aria-expanded="false" data-tw-toggle="dropdown">
+                        <i data-lucide="download" class="w-4 h-4 mr-1.5"></i> Export <i data-lucide="chevron-down" class="w-4 h-4 ml-1.5"></i>
                     </button>
                     <div class="dropdown-menu w-40">
                         <ul class="dropdown-content">
@@ -38,7 +49,7 @@
                 </div>
             </div>
         </div>
-        <div class="overflow-x-auto scrollbar-hidden">
+        <div class="overflow-x-auto scrollbar-hidden px-5 pb-5">
             <div id="visaExpiryListTable" class="mt-5 table-report table-report--tabulator"></div>
         </div>
     </div>
