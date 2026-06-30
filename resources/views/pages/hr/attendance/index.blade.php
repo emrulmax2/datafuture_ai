@@ -26,8 +26,8 @@
         <!-- Toolbar -->
         <div class="flex flex-col xl:flex-row xl:items-end gap-4 px-5 py-4 border-b border-slate-100 dark:border-darkmode-400">
             <form id="filterMonthAttenForm" class="flex flex-wrap xl:flex-nowrap gap-3 items-end mr-auto">
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Query</label>
+                <div class="flex items-center gap-2.5">
+                    <label class="text-[13px] font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap">Query</label>
                     <input id="queryDate" readonly data-org="{{ date('m-Y') }}" value="{{ date('m-Y') }}" name="queryDate" type="text" class="form-control h-[42px] rounded-lg border-slate-200 dark:border-darkmode-400 bg-slate-50 dark:bg-darkmode-800 text-sm font-semibold w-40" placeholder="MM-YYYY">
                 </div>
                 <div class="flex gap-2">
