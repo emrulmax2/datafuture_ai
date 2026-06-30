@@ -6,9 +6,9 @@
 
 @section('subcontent')
     <div class="grid grid-cols-12 gap-6">
-        
+        <div class="col-span-12">
         <!-- BEGIN: Breadcrumb -->
-        <nav class="intro-y mt-8" aria-label="breadcrumb">
+        <nav class="intro-y mt-8 " aria-label="breadcrumb">
             <ol class="flex items-center flex-wrap gap-1.5 text-sm text-slate-400">
                 <li><a href="javascript:void(0);" class="hover:text-primary transition-colors">User</a></li>
                 <li class="text-slate-300 dark:text-darkmode-300">&rsaquo;</li>
@@ -30,7 +30,7 @@
             </a>
         </div>
         <!-- END: Dashboard Header -->
-
+        </div>
         <div class="col-span-12 2xl:col-span-9">
             <!-- BEGIN: Employee Table Panel -->
             <div class="intro-y box mt-5">
