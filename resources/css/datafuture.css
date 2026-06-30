@@ -644,11 +644,11 @@ html:not(.dark) .table-report--tabulator .tabulator .tabulator-loader .tabulator
 .dark .table-report--tabulator .tabulator .tabulator-table .tabulator-row.tabulator-row-even {
     background: transparent;
     background-color: transparent;
-    border-bottom: 1px solid #2d3748;
+    border-bottom: 1px solid rgb(250, 250, 200);
 }
 .dark .table-report--tabulator .tabulator .tabulator-table .tabulator-row:hover,
 .dark .table-report--tabulator .tabulator .tabulator-table .tabulator-row.tabulator-row-even:hover {
-    background-color: rgba(255, 255, 255, 0.04);
+    background-color: rgba(250, 250, 248, 0.04);
 }
 .dark .table-report--tabulator .tabulator .tabulator-row .tabulator-cell {
     color: #e2e8f0;
