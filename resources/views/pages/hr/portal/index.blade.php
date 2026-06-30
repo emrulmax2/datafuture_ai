@@ -8,7 +8,7 @@
     <div class="grid grid-cols-12 gap-6">
         <div class="col-span-12">
         <!-- BEGIN: Breadcrumb -->
-        <nav class="intro-y mt-8 " aria-label="breadcrumb">
+        <nav class="intro-y mt-5 " aria-label="breadcrumb">
             <ol class="flex items-center flex-wrap gap-1.5 text-sm text-slate-400">
                 <li><a href="javascript:void(0);" class="hover:text-primary transition-colors">User</a></li>
                 <li class="text-slate-300 dark:text-darkmode-300">&rsaquo;</li>
@@ -33,7 +33,7 @@
         </div>
         <div class="col-span-12 2xl:col-span-9">
             <!-- BEGIN: Employee Table Panel -->
-            <div class="intro-y box mt-5">
+            <div class="intro-y box mt-3">
                 <!-- Toolbar -->
                 <div class="flex flex-col xl:flex-row xl:items-end gap-4 px-5 py-4 border-b border-slate-100 dark:border-darkmode-400">
                     <form id="tabulatorFilterForm" class="flex flex-wrap items-center gap-2 mr-auto">
@@ -243,7 +243,7 @@
         </div>
         <!-- BEGIN: Right Sidebar -->
         <div class="col-span-12 2xl:col-span-3">
-            <div class="2xl:border-l border-slate-200 dark:border-darkmode-400 2xl:h-full -mb-10 pb-10">
+            <div class="dark:border-darkmode-400 2xl:h-full -mb-10 pb-10">
                 <div class="2xl:pl-6 grid grid-cols-12 gap-x-6 2xl:gap-x-0 gap-y-6 relative">
 
                     <!-- Passport Expiry -->
