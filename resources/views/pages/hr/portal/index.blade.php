@@ -70,10 +70,10 @@
                                 </ul>
                             </div>
                         </div>
-                        <a href="{{ route('employee.create') }}" class="btn btn-success text-white h-[42px] text-sm">
+                        <a href="{{ route('employee.create') }}" class="btn btn-primary text-white h-[42px] text-sm">
                             <i data-lucide="plus-circle" class="w-4 h-4 mr-1.5"></i> Add Employee
                         </a>
-                        <button data-tw-toggle="modal" data-tw-target="#addTempEmployeeModal" type="button" class="btn btn-facebook text-white h-[42px] text-sm">
+                        <button data-tw-toggle="modal" data-tw-target="#addTempEmployeeModal" type="button" class="btn btn-outline-accent h-[42px] text-sm">
                             <i data-lucide="plus-circle" class="w-4 h-4 mr-1.5"></i> Add Temp Employee
                         </button>
                     </div>
@@ -144,7 +144,7 @@
                                 </div>
                             @endforeach
                         @else
-                            <div class="flex items-center px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-700 text-sm">
+                            <div class="flex items-center px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-sm">
                                 <i data-lucide="alert-triangle" class="w-4 h-4 mr-2 flex-none"></i> No pending leave available.
                             </div>
                         @endif
@@ -179,7 +179,7 @@
                                 </div>
                             @endforeach
                         @else
-                            <div class="flex items-center px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-700 text-sm">
+                            <div class="flex items-center px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-sm">
                                 <i data-lucide="alert-triangle" class="w-4 h-4 mr-2 flex-none"></i> No absent attendance found for today.
                             </div>
                         @endif
@@ -227,7 +227,7 @@
                                 </div>
                             @endforeach
                         @else
-                            <div class="flex items-center px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-700 text-sm">
+                            <div class="flex items-center px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-sm">
                                 <i data-lucide="alert-triangle" class="w-4 h-4 mr-2 flex-none"></i> No Holiday / Vacation found for today.
                             </div>
                         @endif
@@ -246,7 +246,7 @@
                     <!-- Passport Expiry -->
                     <div class="col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-12 mt-3">
                         <div class="intro-x flex items-center gap-2 mb-4">
-                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-amber-100 text-amber-600 flex-none">
+                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-soft text-soft-text flex-none">
                                 <i data-lucide="scan-face" class="w-3.5 h-3.5"></i>
                             </span>
                             <h2 class="text-base font-semibold text-slate-700 dark:text-white truncate">Passport Expiry</h2>
@@ -273,13 +273,13 @@
                                             <div class="font-semibold text-sm text-slate-700 dark:text-slate-200 uppercase truncate">{{ $pass->employee->first_name.' '.$pass->employee->last_name }}</div>
                                             <div class="text-xs text-slate-400 mt-0.5">{{ date('jS F, Y', strtotime($pass->doc_expire)) }}</div>
                                         </div>
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold whitespace-nowrap {{ $isExpired ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700' }}">
+                                        <span class="lcc-badge {{ $isExpired ? 'lcc-badge--critical' : 'lcc-badge--warning' }}">
                                             {{ $diffDays }} Days
                                         </span>
                                     </div>
                                 @endforeach
                             @else
-                                <div class="flex items-center px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-700 text-sm">
+                                <div class="flex items-center px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-sm">
                                     <i data-lucide="alert-triangle" class="w-4 h-4 mr-2 flex-none"></i> No data found.
                                 </div>
                             @endif
@@ -289,7 +289,7 @@
                     <!-- Visa Expiry -->
                     <div class="col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-12 mt-3">
                         <div class="intro-x flex items-center gap-2 mb-4">
-                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex-none">
+                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-soft text-soft-text flex-none">
                                 <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
                             </span>
                             <h2 class="text-base font-semibold text-slate-700 dark:text-white truncate">Visa Expiry</h2>
@@ -316,13 +316,13 @@
                                             <div class="font-semibold text-sm text-slate-700 dark:text-slate-200 uppercase truncate">{{ $pass->employee->first_name.' '.$pass->employee->last_name }}</div>
                                             <div class="text-xs text-slate-400 mt-0.5">{{ date('jS F, Y', strtotime($pass->workpermit_expire)) }}</div>
                                         </div>
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold whitespace-nowrap {{ $isExpired ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700' }}">
+                                        <span class="lcc-badge {{ $isExpired ? 'lcc-badge--critical' : 'lcc-badge--warning' }}">
                                             {{ $diffDays }} Days
                                         </span>
                                     </div>
                                 @endforeach
                             @else
-                                <div class="flex items-center px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-700 text-sm">
+                                <div class="flex items-center px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-sm">
                                     <i data-lucide="alert-triangle" class="w-4 h-4 mr-2 flex-none"></i> No data found.
                                 </div>
                             @endif
@@ -332,7 +332,7 @@
                     <!-- Upcoming Appraisal -->
                     <div class="col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-12 mt-3">
                         <div class="intro-x flex items-center gap-2 mb-4">
-                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-purple-100 text-purple-600 flex-none">
+                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-soft text-soft-text flex-none">
                                 <i data-lucide="clock" class="w-3.5 h-3.5"></i>
                             </span>
                             <h2 class="text-base font-semibold text-slate-700 dark:text-white">Upcoming Appraisal in 60 Days</h2>
@@ -361,14 +361,14 @@
                                                 <div class="text-xs text-slate-400 mt-0.5">{{ date('jS M, Y', strtotime($apr->due_on)) }}</div>
                                                 <span class="text-xs font-medium {{ $isOverdue ? 'text-danger' : 'text-warning' }}">{{ $isOverdue ? 'Overdue' : 'Due to Complete' }}</span>
                                             </div>
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold whitespace-nowrap {{ $isOverdue ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700' }}">
+                                            <span class="lcc-badge {{ $isOverdue ? 'lcc-badge--critical' : 'lcc-badge--warning' }}">
                                                 {{ $isOverdue ? 'by ' : 'in ' }}{{ $diffDays }} days
                                             </span>
                                         </a>
                                     </div>
                                 @endforeach
                             @else
-                                <div class="flex items-center px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-700 text-sm">
+                                <div class="flex items-center px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-sm">
                                     <i data-lucide="alert-triangle" class="w-4 h-4 mr-2 flex-none"></i> No data found.
                                 </div>
                             @endif
@@ -377,7 +377,7 @@
 
                 </div>
 
-                <a href="{{ route('hr.portal.vacancy') }}" class="btn btn-twitter w-auto justify-center absolute b-0 r-0 mb-6 mr-6"><i data-lucide="list-todo" class="w-4 h-4 mr-2"></i> Vacancies</a>
+                <a href="{{ route('hr.portal.vacancy') }}" class="btn btn-primary text-white w-auto justify-center absolute b-0 r-0 mb-6 mr-6"><i data-lucide="list-todo" class="w-4 h-4 mr-2"></i> Vacancies</a>
             </div>
         </div>
         <!-- END: Right Sidebar -->
