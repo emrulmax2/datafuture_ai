@@ -411,6 +411,129 @@
 .lcc-badge--critical { background: #fdecec; color: #b42318; }
 .lcc-badge--warning  { background: #fbf3e2; color: #b45309; }
 
+/* ════════════════════════════════════════════════════════════════════════
+   HR Monthly Attendance — "Slate & Teal" daily-sync table (design handoff).
+   Date badge + status pills + synchronise chip/button + row actions, all
+   scoped under .att-table so the look never leaks to other tables. Light
+   surfaces are the source of truth; .dark variants restated for legibility.
+   ════════════════════════════════════════════════════════════════════════ */
+.att-table { width: 100%; border-collapse: collapse; }
+.att-table thead tr { background: #f7fafb; border-bottom: 1px solid #e7e9e6; }
+.att-table thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #8a95a3;
+    white-space: nowrap;
+    padding: 0.85rem 1rem 0.85rem 0;
+}
+.att-table tbody td {
+    padding: 0.65rem 1rem 0.65rem 0;
+    border-bottom: 1px solid #f1f4f2;
+    vertical-align: middle;
+}
+.att-table th:first-child,
+.att-table td:first-child { padding-left: 1.25rem; }
+.att-table th:last-child,
+.att-table td:last-child { padding-right: 1.25rem; }
+.att-table tbody tr { transition: background-color 0.12s ease; }
+.att-table tbody tr:hover { background: #f6fbfb; }
+.att-table tbody tr.att-row--weekend { background: #fafbfc; }
+
+/* Date cell — colored day badge + long date + status tag */
+.att-date { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+.att-date__badge {
+    width: 42px; height: 42px; flex: 0 0 auto;
+    border-radius: 11px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: #f2f5f8; border: 1px solid #e7e9e6;
+}
+.att-date__badge--synced  { background: #eaf6f5; border-color: #cde8e4; }
+.att-date__badge--weekend { background: #f4f6f8; }
+.att-date__dow { font-size: 9px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: #0e7c86; line-height: 1; }
+.att-date__day { font-size: 16px; font-weight: 800; color: #13262b; line-height: 1.05; }
+.att-date__badge--weekend .att-date__dow { color: #aeb6bd; }
+.att-date__badge--weekend .att-date__day { color: #8a95a3; }
+.att-date__meta { min-width: 0; }
+.att-date__long { font-size: 13.5px; font-weight: 700; color: #1f2733; }
+.att-date__tag  { font-size: 11.5px; font-weight: 600; color: #9aa6b0; }
+.att-date__tag--await { color: #b45309; }
+
+/* Count pills (Issues / Absents / Overtime / Pendings) */
+.att-pill {
+    display: inline-flex; align-items: center; white-space: nowrap;
+    padding: 5px 11px; border-radius: 8px;
+    font-size: 12.5px; font-weight: 700; line-height: 1.2;
+    text-decoration: none;
+}
+.att-pill--issue { background: #fdecec; color: #b42318; }
+.att-pill--warn  { background: #fbf3e2; color: #b45309; }
+.att-pill--zero  { background: transparent; color: #b6bec6; }
+
+/* Synchronise chip (done) + button (pending) */
+.att-sync--done {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 13px; border-radius: 999px;
+    font-size: 12.5px; font-weight: 700;
+    background: #dcf1ef; color: #0b6670;
+}
+.att-sync-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 13px; border-radius: 9px;
+    font-size: 12.5px; font-weight: 700;
+    background: #fff; border: 1px solid #cfe3e5; color: #0e7c86;
+    cursor: pointer; transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+.att-sync-btn:hover { background: #f2fafa; border-color: #0e7c86; }
+.att-sync-btn:disabled { opacity: 0.6; cursor: default; }
+
+/* Actions — attendances link + clear-day delete */
+.att-actions { display: flex; align-items: center; gap: 9px; }
+.att-link {
+    display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+    font-size: 12.5px; font-weight: 700; color: #0e7c86;
+    padding: 6px 12px; border-radius: 9px;
+    border: 1px solid #cfe3e5; background: #f4fafa;
+    text-decoration: none; transition: background-color 0.12s ease;
+}
+.att-link:hover { background: #e6f4f3; }
+.att-link--zero { color: #b6bec6; font-weight: 600; border: 0; background: transparent; }
+.att-del {
+    width: 32px; height: 32px; flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 8px; border: 1px solid #f0dada;
+    background: #fff; color: #c0392b; cursor: pointer;
+    transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+.att-del:hover { background: #fdeded; border-color: #e0a8a8; }
+
+/* Dark mode — keep rows readable on the dark surface */
+.dark .att-table thead tr { background: rgba(255, 255, 255, 0.03); border-bottom-color: rgba(255, 255, 255, 0.08); }
+.dark .att-table thead th { color: #64748b; }
+.dark .att-table tbody td { border-bottom-color: rgba(255, 255, 255, 0.06); }
+.dark .att-table tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
+.dark .att-table tbody tr.att-row--weekend { background: rgba(255, 255, 255, 0.02); }
+.dark .att-date__badge { background: #1f2c30; border-color: #2b3a3f; }
+.dark .att-date__badge--synced { background: #11302e; border-color: #1d4b46; }
+.dark .att-date__badge--weekend { background: #1a2428; }
+.dark .att-date__dow { color: #2dd4bf; }
+.dark .att-date__day { color: #e2e8f0; }
+.dark .att-date__badge--weekend .att-date__dow { color: #6b7780; }
+.dark .att-date__badge--weekend .att-date__day { color: #94a3b8; }
+.dark .att-date__long { color: #e2e8f0; }
+.dark .att-date__tag { color: #94a3b8; }
+.dark .att-pill--zero { color: #5b6770; }
+.dark .att-sync-btn { background: #16242a; border-color: #2b4a4e; color: #45c4cd; }
+.dark .att-sync-btn:hover { background: #1b2d33; border-color: #45c4cd; }
+.dark .att-link { background: #16242a; border-color: #2b4a4e; color: #45c4cd; }
+.dark .att-link:hover { background: #1b2d33; }
+.dark .att-link--zero { color: #5b6770; background: transparent; }
+.dark .att-del { background: #241a1c; border-color: #4a2b2e; color: #f08c84; }
+.dark .att-del:hover { background: #2e2024; border-color: #f08c84; }
+
 /* ── Typography — Newsreader (display headings) + Public Sans (UI body) ──
    Matches the "HR Dashboard — Design Handoff": serif display + grotesque body. */
 body {
