@@ -153,6 +153,11 @@ var employeeListTable = (function () {
             filterTitleHTMLForm();
         });
 
+        // Status dropdown filters immediately (Go button removed to match design)
+        $("#status").on("change", function (event) {
+            filterTitleHTMLForm();
+        });
+
         // On reset filter form
         $("#tabulator-html-filter-reset").on("click", function (event) {
             $("#query").val("");

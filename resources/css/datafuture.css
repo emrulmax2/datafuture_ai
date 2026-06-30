@@ -388,6 +388,53 @@
 .lcc-badge--critical { background: #fdecec; color: #b42318; }
 .lcc-badge--warning  { background: #fbf3e2; color: #b45309; }
 
+/* ── Typography — Newsreader (display headings) + Public Sans (UI body) ──
+   Matches the "HR Dashboard — Design Handoff": serif display + grotesque body. */
+body {
+    font-family: 'Public Sans', 'Roboto', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.font-display {
+    font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+    letter-spacing: -0.01em;
+    font-feature-settings: "liga" 1, "kern" 1;
+}
+
+/* ── HR report tables — match the "Slate & Teal" surface tokens ──
+   Clean white rows (no zebra), hairline dividers, tinted header, teal active page.
+   Scoped to .table-report--tabulator so only the HR/report tables are affected;
+   light-surface colours guarded by html:not(.dark) to preserve dark mode. */
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-header {
+    background: #F6F8F5;
+    border-top: 0;
+    border-bottom: 1px solid #E7E9E6;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
+    text-transform: uppercase;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #7A847D;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-row,
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-row.tabulator-row-even {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E7E9E6;
+}
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-row:hover,
+html:not(.dark) .table-report--tabulator .tabulator .tabulator-row.tabulator-row-even:hover {
+    background: #F6F8F5;
+}
+.table-report--tabulator .tabulator .tabulator-row .tabulator-cell {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+}
+.table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page.active,
+.table-report--tabulator .tabulator .tabulator-footer .tabulator-paginator .tabulator-page.active:hover {
+    background: rgb(var(--color-primary));
+    color: #fff;
+    border-color: rgb(var(--color-primary));
+}
+
 .modal-alert{
     display: none;
 }
