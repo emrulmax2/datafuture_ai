@@ -7,15 +7,15 @@
     <!-- BEGIN: Page Header -->
     <div class="intro-y flex flex-wrap items-center justify-between gap-3 mt-8 mb-2">
         <div>
-            <h2 class="font-display text-2xl font-semibold text-slate-800 dark:text-white leading-tight tracking-tight">Monthly Attendance</h2>
-            <p class="text-sm text-slate-400 mt-1">Daily synchronisation &amp; payroll &middot; London Churchill College</p>
+            <h2 class="font-display text-3xl font-semibold text-slate-800 dark:text-white leading-tight tracking-tight">Monthly Attendance</h2>
+            <p class="text-sm text-slate-400 mt-1">Daily sync &amp; payroll status &middot; London Churchill College</p>
         </div>
         <div class="flex flex-wrap gap-2">
             <a href="{{ route('hr.portal.leave.calendar') }}" class="btn btn-outline-secondary h-[42px] text-sm">
                 <i data-lucide="calendar-days" class="w-4 h-4 mr-1.5"></i> Planner
             </a>
             <a href="{{ route('hr.portal.live.attedance') }}" class="btn btn-primary text-white h-[42px] text-sm">
-                <i data-lucide="radio" class="w-4 h-4 mr-1.5"></i> Live Attendance
+                <span class="mr-2" style="display:inline-block;width:8px;height:8px;border-radius:9999px;background:#7de3b0;box-shadow:0 0 0 3px rgba(125,227,176,.3)"></span> Live Attendance
             </a>
         </div>
     </div>
@@ -27,7 +27,7 @@
         <div class="flex flex-col xl:flex-row xl:items-end gap-4 px-5 py-4 border-b border-slate-100 dark:border-darkmode-400">
             <form id="filterMonthAttenForm" class="flex flex-wrap xl:flex-nowrap gap-3 items-end mr-auto">
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Month</label>
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Query</label>
                     <input id="queryDate" readonly data-org="{{ date('m-Y') }}" value="{{ date('m-Y') }}" name="queryDate" type="text" class="form-control h-[42px] rounded-lg border-slate-200 dark:border-darkmode-400 bg-slate-50 dark:bg-darkmode-800 text-sm font-semibold w-40" placeholder="MM-YYYY">
                 </div>
                 <div class="flex gap-2">
@@ -46,12 +46,12 @@
                             </g>
                         </svg>
                     </button>
-                    <button type="button" id="generateReport" class="btn btn-outline-accent h-[42px] text-sm">Generate Report</button>
+                    <button type="button" id="generateReport" class="btn btn-outline-secondary h-[42px] text-sm"><i data-lucide="file-text" class="w-4 h-4 mr-1.5"></i> Generate Report</button>
                 </div>
             </form>
             <div class="relative">
                 <div class="dropdown" id="uploadsDropdown">
-                    <button class="dropdown-toggle btn btn-primary text-white h-[42px] text-sm" aria-expanded="false" data-tw-toggle="dropdown"><i data-lucide="plus-circle" class="w-4 h-4 mr-1.5"></i> Upload PaySlips <i data-lucide="chevron-down" class="w-4 h-4 ml-1.5"></i></button>
+                    <button class="dropdown-toggle btn btn-outline-accent h-[42px] text-sm" aria-expanded="false" data-tw-toggle="dropdown"><i data-lucide="upload" class="w-4 h-4 mr-1.5"></i> Upload PaySlips <i data-lucide="chevron-down" class="w-4 h-4 ml-1.5"></i></button>
                     <div class="dropdown-menu w-72">
                         <ul class="dropdown-content">
                             <li><h6 class="dropdown-header">Pending Payslips</h6></li>
@@ -83,17 +83,17 @@
                 </div>
             </div>
         </div>
-        <div class="overflow-x-auto scrollbar-hidden px-5 pb-5 pt-1" id="attendanceSyncListTable">
-            <table class="table table-hover mt-2 [&_tbody_td]:border-b [&_tbody_td]:border-slate-100 dark:[&_tbody_td]:border-darkmode-400 [&_tbody_td]:py-3">
+        <div class="overflow-x-auto scrollbar-hidden pb-2" id="attendanceSyncListTable">
+            <table class="att-table">
                 <thead>
-                    <tr class="border-b-2 border-slate-100 dark:border-darkmode-400">
-                        <th class="whitespace-nowrap text-left text-xs font-bold uppercase tracking-wider text-slate-400">Date</th>
-                        <th class="whitespace-nowrap text-left text-xs font-bold uppercase tracking-wider text-slate-400">Synchronise</th>
-                        <th class="whitespace-nowrap text-left text-xs font-bold uppercase tracking-wider text-slate-400">Issues</th>
-                        <th class="whitespace-nowrap text-left text-xs font-bold uppercase tracking-wider text-slate-400">Absents</th>
-                        <th class="whitespace-nowrap text-left text-xs font-bold uppercase tracking-wider text-slate-400">Overtime</th>
-                        <th class="whitespace-nowrap text-left text-xs font-bold uppercase tracking-wider text-slate-400">Pendings</th>
-                        <th class="whitespace-nowrap text-left text-xs font-bold uppercase tracking-wider text-slate-400">Actions</th>
+                    <tr>
+                        <th>Date</th>
+                        <th>Synchronise</th>
+                        <th>Issues</th>
+                        <th>Absents</th>
+                        <th>Overtime</th>
+                        <th>Pendings</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
