@@ -7,7 +7,7 @@
     <!-- BEGIN: Page Header -->
     <div class="intro-y flex flex-wrap items-center justify-between gap-3 mt-8 mb-2">
         <div>
-            <h2 class="text-xl font-semibold text-slate-800 dark:text-white leading-tight">Monthly Attendance</h2>
+            <h2 class="font-display text-2xl font-semibold text-slate-800 dark:text-white leading-tight tracking-tight">Monthly Attendance</h2>
             <p class="text-sm text-slate-400 mt-1">Daily synchronisation &amp; payroll &middot; London Churchill College</p>
         </div>
         <div class="flex flex-wrap gap-2">

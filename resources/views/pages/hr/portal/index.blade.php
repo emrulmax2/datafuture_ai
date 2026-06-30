@@ -11,11 +11,11 @@
             <!-- BEGIN: Dashboard Header -->
             <div class="intro-y flex flex-wrap items-center justify-between gap-3 mt-8 mb-2">
                 <div>
-                    <h2 class="text-xl font-semibold text-slate-800 dark:text-white leading-tight">HR Dashboard</h2>
+                    <h2 class="font-display text-3xl font-semibold text-slate-800 dark:text-white leading-tight tracking-tight">HR Dashboard</h2>
                     <p class="text-sm text-slate-400 mt-1">Workforce overview &middot; London Churchill College</p>
                 </div>
-                <a href="{{ route('hr.portal.employment.reports.show') }}" class="flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors">
-                    <i data-lucide="bar-chart-2" class="w-4 h-4"></i> Reports
+                <a href="{{ route('hr.portal.employment.reports.show') }}" class="btn btn-outline-secondary h-[42px] text-sm">
+                    <i data-lucide="bar-chart-2" class="w-4 h-4 mr-1.5"></i> Reports
                 </a>
             </div>
             <!-- END: Dashboard Header -->
@@ -24,28 +24,19 @@
             <div class="intro-y box mt-5">
                 <!-- Toolbar -->
                 <div class="flex flex-col xl:flex-row xl:items-end gap-4 px-5 py-4 border-b border-slate-100 dark:border-darkmode-400">
-                    <form id="tabulatorFilterForm" class="flex flex-wrap xl:flex-nowrap gap-3 items-end mr-auto">
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Query</label>
-                            <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 dark:bg-darkmode-800 dark:border-darkmode-400 rounded-lg px-3 h-[42px] w-60 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-                                <i data-lucide="search" class="w-4 h-4 text-slate-400 flex-none"></i>
-                                <input id="query" name="query" type="text" class="bg-transparent border-0 outline-none text-sm text-slate-700 dark:text-slate-300 w-full placeholder:text-slate-400" placeholder="Search...">
-                            </div>
+                    <form id="tabulatorFilterForm" class="flex flex-wrap items-center gap-2 mr-auto">
+                        <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 dark:bg-darkmode-800 dark:border-darkmode-400 rounded-lg px-3 h-[42px] w-72 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+                            <i data-lucide="search" class="w-4 h-4 text-slate-400 flex-none"></i>
+                            <input id="query" name="query" type="text" class="bg-transparent border-0 outline-none text-sm text-slate-700 dark:text-slate-300 w-full placeholder:text-slate-400" placeholder="Search name, role, department...">
                         </div>
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Status</label>
-                            <select id="status" name="status" class="form-select h-[42px] rounded-lg border-slate-200 dark:border-darkmode-400 bg-slate-50 dark:bg-darkmode-800 text-sm font-semibold w-36">
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                                <option value="2">Temporary</option>
-                                <option value="4">Submitted</option>
-                                <option value="3">Archived</option>
-                            </select>
-                        </div>
-                        <div class="flex gap-2">
-                            <button id="tabulator-html-filter-go" type="button" class="btn btn-primary h-[42px] px-5 text-sm">Go</button>
-                            <button id="tabulator-html-filter-reset" type="button" class="btn btn-outline-secondary h-[42px] px-5 text-sm">Reset</button>
-                        </div>
+                        <select id="status" name="status" class="form-select h-[42px] rounded-lg border-slate-200 dark:border-darkmode-400 bg-slate-50 dark:bg-darkmode-800 text-sm font-semibold w-36">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                            <option value="2">Temporary</option>
+                            <option value="4">Submitted</option>
+                            <option value="3">Archived</option>
+                        </select>
+                        <button id="tabulator-html-filter-reset" type="button" class="btn btn-outline-secondary h-[42px] px-5 text-sm">Reset</button>
                     </form>
                     <div class="flex flex-wrap gap-2">
                         <button id="tabulator-print" class="btn btn-outline-secondary h-[42px] text-sm">
@@ -74,7 +65,7 @@
                             <i data-lucide="plus-circle" class="w-4 h-4 mr-1.5"></i> Add Employee
                         </a>
                         <button data-tw-toggle="modal" data-tw-target="#addTempEmployeeModal" type="button" class="btn btn-outline-accent h-[42px] text-sm">
-                            <i data-lucide="plus-circle" class="w-4 h-4 mr-1.5"></i> Add Temp Employee
+                            <i data-lucide="plus-circle" class="w-4 h-4 mr-1.5"></i> Temp
                         </button>
                     </div>
                 </div>

@@ -93,6 +93,8 @@ module.exports = {
             },
             fontFamily: {
                 roboto: ['Roboto'],
+                sans: ['Public Sans', 'Roboto', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+                display: ['Newsreader', 'Georgia', 'Times New Roman', 'serif'],
             },
             container: {
                 center: true,

@@ -7,7 +7,7 @@
     <!-- BEGIN: Page Header -->
     <div class="intro-y flex flex-wrap items-center justify-between gap-3 mt-8 mb-2">
         <div>
-            <h2 class="text-xl font-semibold text-slate-800 dark:text-white leading-tight">Absent Employees</h2>
+            <h2 class="font-display text-2xl font-semibold text-slate-800 dark:text-white leading-tight tracking-tight">Absent Employees</h2>
             <p class="text-sm text-slate-400 mt-1">{{ date('jS M, Y', $date) }} &middot; London Churchill College</p>
         </div>
         <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 dark:bg-darkmode-800 dark:border-darkmode-400 rounded-lg px-3 h-[42px] focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
