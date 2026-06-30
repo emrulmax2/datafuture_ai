@@ -16,44 +16,58 @@
     </div>
     <!-- END: Page Header -->
 
-    <!-- BEGIN: HTML Table Data -->
-    <div class="intro-y box mt-5">
-        <!-- Toolbar -->
-        <div class="flex flex-col xl:flex-row xl:items-center gap-4 px-5 py-4 border-b border-slate-100 dark:border-darkmode-400">
-            <div class="mr-auto">
-                <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Report</div>
-                <div class="text-sm font-semibold text-slate-600 dark:text-slate-300 mt-0.5">Passport expiry</div>
-            </div>
-            <div class="flex flex-wrap gap-2">
-                <button id="tabulator-print" class="btn btn-outline-secondary h-[42px] text-sm">
-                    <i data-lucide="printer" class="w-4 h-4 mr-1.5"></i> Print
+    <!-- BEGIN: Toolbar -->
+    <div class="intro-y box mt-5 flex flex-col sm:flex-row sm:items-center gap-4 px-5 py-4">
+        <div class="mr-auto">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Report</div>
+            <div class="text-sm font-semibold text-slate-600 dark:text-slate-300 mt-0.5">Passport expiry &middot; {{ $records->count() }} {{ \Illuminate\Support\Str::plural('record', $records->count()) }}</div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <button id="list-print" type="button" class="btn btn-outline-secondary h-[42px] text-sm">
+                <i data-lucide="printer" class="w-4 h-4 mr-1.5"></i> Print
+            </button>
+            <div class="dropdown">
+                <button class="dropdown-toggle btn btn-outline-secondary h-[42px] text-sm" aria-expanded="false" data-tw-toggle="dropdown">
+                    <i data-lucide="download" class="w-4 h-4 mr-1.5"></i> Export <i data-lucide="chevron-down" class="w-4 h-4 ml-1.5"></i>
                 </button>
-                <div class="dropdown">
-                    <button class="dropdown-toggle btn btn-outline-secondary h-[42px] text-sm" aria-expanded="false" data-tw-toggle="dropdown">
-                        <i data-lucide="download" class="w-4 h-4 mr-1.5"></i> Export <i data-lucide="chevron-down" class="w-4 h-4 ml-1.5"></i>
-                    </button>
-                    <div class="dropdown-menu w-40">
-                        <ul class="dropdown-content">
-                            <li>
-                                <a id="tabulator-export-csv" href="javascript:;" class="dropdown-item">
-                                    <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export CSV
-                                </a>
-                            </li>
-                            <li>
-                                <a id="tabulator-export-xlsx" href="javascript:;" class="dropdown-item">
-                                    <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export XLSX
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="dropdown-menu w-40">
+                    <ul class="dropdown-content">
+                        <li><a id="list-export-csv" href="javascript:;" class="dropdown-item"><i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export CSV</a></li>
+                        <li><a id="list-export-xlsx" href="javascript:;" class="dropdown-item"><i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Export XLSX</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
-        <div class="overflow-x-auto scrollbar-hidden px-5 pb-5">
-            <div id="passportExpiryListTable" class="mt-5 table-report table-report--tabulator"></div>
-        </div>
     </div>
-    <!-- END: HTML Table Data -->
+    <!-- END: Toolbar -->
+
+    <!-- BEGIN: Expiry Cards -->
+    <div id="passportExpiryCards" class="intro-y grid grid-cols-1 lg:grid-cols-2 gap-3 mt-5">
+        @forelse($records as $rec)
+            @php
+                $expiryDate = date('Y-m-d', strtotime($rec->doc_expire));
+                $isExpired = date('Y-m-d') > $expiryDate;
+                $diffDays = \Carbon\Carbon::parse($expiryDate)->diffInDays(\Carbon\Carbon::now());
+                $designation = (isset($rec->employee->employment->employeeJobTitle->name) ? $rec->employee->employment->employeeJobTitle->name : '');
+            @endphp
+            <a href="{{ route('profile.employee.view', $rec->employee_id) }}" class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-darkmode-600 rounded-xl border border-slate-100 dark:border-darkmode-400 shadow-sm hover:border-primary/30 transition-colors">
+                <div class="flex-none w-11 h-11 overflow-hidden rounded-full image-fit ring-2 ring-slate-100 dark:ring-darkmode-400">
+                    <img src="{{ $rec->employee->photo_url }}" alt="{{ $rec->employee->first_name.' '.$rec->employee->last_name }}">
+                </div>
+                <div class="min-w-0 flex-1">
+                    <div class="font-semibold text-sm text-slate-700 dark:text-slate-200 uppercase truncate">{{ $rec->employee->first_name.' '.$rec->employee->last_name }}</div>
+                    <div class="text-xs text-slate-400 mt-0.5 truncate">{{ $designation ?: 'Unknown' }}</div>
+                    <div class="text-xs text-slate-400 mt-0.5">No. {{ $rec->doc_number ?: '—' }} &middot; Expires {{ date('jS M, Y', strtotime($rec->doc_expire)) }}</div>
+                </div>
+                <span class="lcc-badge {{ $isExpired ? 'lcc-badge--critical' : 'lcc-badge--warning' }} flex-none">{{ $diffDays }} {{ $diffDays == 1 ? 'Day' : 'Days' }}</span>
+            </a>
+        @empty
+            <div class="lg:col-span-2 flex items-center px-4 py-6 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-sm">
+                <i data-lucide="alert-triangle" class="w-4 h-4 mr-2 flex-none"></i> No passport expiries within the next 60 days.
+            </div>
+        @endforelse
+    </div>
+    <!-- END: Expiry Cards -->
 
 
     <!-- BEGIN: Success Modal Content -->
@@ -116,5 +130,6 @@
 @endsection
 
 @section('script')
+    <script>window.__expiryExport = @json($exportRows); window.__expiryName = 'passport-expiry'; window.__expirySheet = 'Passport Expiry';</script>
     @vite('resources/js/hr-passport-expiry.js')
 @endsection
