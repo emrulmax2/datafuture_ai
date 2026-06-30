@@ -255,7 +255,7 @@ class EmployeeAttendanceController extends Controller
 
                 /* Counts */
                 $html .= '<td>'.$this->renderCountPill($theUrl, $issues, 'Issues', 'issue').'</td>';
-                $html .= '<td>'.$this->renderCountPill($theUrl, $absents, 'Absents', 'warn').'</td>';
+                $html .= '<td>'.$this->renderCountPill($theUrl, $absents, 'Absents', 'issue').'</td>';
                 $html .= '<td>'.$this->renderCountPill($theUrl, $overtime, 'Overtime', 'warn').'</td>';
                 $html .= '<td>'.$this->renderCountPill($theUrl, $pendings, 'Pendings', 'warn').'</td>';
                 /* Actions */
