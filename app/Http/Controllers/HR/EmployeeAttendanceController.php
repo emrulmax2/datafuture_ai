@@ -225,42 +225,42 @@ class EmployeeAttendanceController extends Controller
 
                 $html .= '<td>';
                     if($issues > 0):
-                        $html .= '<a href="'.$theUrl.'" target="_blank" class="btn btn-sm btn-warning text-white rounded-0">'.$issues.' Issues</a>';
+                        $html .= '<a href="'.$theUrl.'" target="_blank" class="lcc-badge lcc-badge--warning has-dot">'.$issues.' Issues</a>';
                     else:
-                        $html .= '<a href="'.$theUrl.'" class="btn btn-sm btn-success text-white rounded-0">0 Issues</a>';
+                        $html .= '<a href="'.$theUrl.'" class="lcc-badge lcc-badge--active has-dot">0 Issues</a>';
                     endif;
                 $html .= '</td>';
 
                 $html .= '<td>';
                     if($absents > 0):
-                        $html .= '<a href="'.$theUrl.'" target="_blank" class="btn btn-sm btn-warning text-white rounded-0">'.$absents.' Absents</a>';
+                        $html .= '<a href="'.$theUrl.'" target="_blank" class="lcc-badge lcc-badge--warning has-dot">'.$absents.' Absents</a>';
                     else:
-                        $html .= '<a href="'.$theUrl.'" class="btn btn-sm btn-success text-white rounded-0">0 Absents</a>';
+                        $html .= '<a href="'.$theUrl.'" class="lcc-badge lcc-badge--active has-dot">0 Absents</a>';
                     endif;
                 $html .= '</td>';
 
                 $html .= '<td>';
                     if($overtime > 0):
-                        $html .= '<a href="'.$theUrl.'" target="_blank" class="btn btn-sm btn-warning text-white rounded-0">'.$overtime.' Overtime</a>';
+                        $html .= '<a href="'.$theUrl.'" target="_blank" class="lcc-badge lcc-badge--warning has-dot">'.$overtime.' Overtime</a>';
                     else:
-                        $html .= '<a href="'.$theUrl.'" class="btn btn-sm btn-success text-white rounded-0">0 Overtime</a>';
+                        $html .= '<a href="'.$theUrl.'" class="lcc-badge lcc-badge--active has-dot">0 Overtime</a>';
                     endif;
                 $html .= '</td>';
                 $html .= '<td>';
                     if($pendings > 0):
-                        $html .= '<a href="'.$theUrl.'" target="_blank" class="btn btn-sm btn-warning text-white rounded-0">'.$pendings.' Pendings</a>';
+                        $html .= '<a href="'.$theUrl.'" target="_blank" class="lcc-badge lcc-badge--warning has-dot">'.$pendings.' Pendings</a>';
                     else:
-                        $html .= '<a href="'.$theUrl.'" class="btn btn-sm btn-success text-white rounded-0">0 Pendings</a>';
+                        $html .= '<a href="'.$theUrl.'" class="lcc-badge lcc-badge--active has-dot">0 Pendings</a>';
                     endif;
                 $html .= '</td>';
                 $html .= '<td>';
                     if($allRows > 0):
-                        $html .= '<a href="'.$theUrl.'" target="_blank" class="btn btn-sm btn-warning text-white rounded-0">'.$allRows.' Attendances</a>';
+                        $html .= '<a href="'.$theUrl.'" target="_blank" class="lcc-badge lcc-badge--warning has-dot">'.$allRows.' Attendances</a>';
                         if(isset(auth()->user()->priv()['del_attendance']) && auth()->user()->priv()['del_attendance'] == 1):
                             $html .= '<button data-date="'.date('Y-m-d', strtotime($todayDate)).'" class="deleteAllSyncd btn btn-sm btn-danger text-white rounded-0 ml-1 relative" style="top: 4px;" type="button"><i data-lucide="trash-2" class="w-4 h-4"></i></button>';
                         endif;
                     else:
-                        $html .= '<a href="'.$theUrl.'" class="btn btn-sm btn-success text-white rounded-0">0 Attendances</a>';
+                        $html .= '<a href="'.$theUrl.'" class="lcc-badge lcc-badge--active has-dot">0 Attendances</a>';
                     endif;
                 $html .= '</td>';
             $html .= '</tr>';
