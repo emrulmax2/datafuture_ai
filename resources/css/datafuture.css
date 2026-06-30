@@ -57,9 +57,9 @@
 @media (min-width: 768px) {
     body {
         background:
-            radial-gradient(1200px 560px at 90% -8%, rgba(21, 86, 77, 0.08), transparent 60%),
-            radial-gradient(850px 460px at -5% 110%, rgba(140, 43, 43, 0.05), transparent 55%),
-            #f3efe7;
+            radial-gradient(1200px 560px at 90% -8%, rgba(14, 124, 134, 0.07), transparent 60%),
+            radial-gradient(850px 460px at -5% 110%, rgba(20, 48, 56, 0.05), transparent 55%),
+            #EEF1F4;
     }
 
     .content.content--top-nav {
@@ -68,9 +68,9 @@
 
     /* Top bar: dark pine gradient with gold accent line */
     .top-bar-boxed.hr-topbar {
-        background: linear-gradient(105deg, #0e3d37 0%, #15564d 55%, #1c6c61 100%) !important;
-        border-bottom: 3px solid #b88a3d !important;
-        box-shadow: 0 8px 18px -14px rgba(14, 61, 55, 0.8);
+        background: linear-gradient(105deg, #102a31 0%, #143038 58%, #17414a 100%) !important;
+        border-bottom: 3px solid #e0a82e !important;
+        box-shadow: 0 8px 18px -14px rgba(19, 38, 43, 0.85);
         position: relative;
         overflow: hidden;
     }
@@ -117,7 +117,7 @@
         white-space: nowrap;
     }
     .top-bar-boxed.hr-topbar .college-identity__line--gold {
-        color: #c8a84b;
+        color: #e0a82e;
         letter-spacing: 0.28em;
         font-size: 0.63rem;
         margin-top: 0.15rem;
@@ -203,7 +203,7 @@
     }
     /* Hover state: subtle tint instead of the bg-slate-100 box */
     .hr-top-nav > ul > li:hover > .top-menu:not(.top-menu--active) {
-        background: rgba(var(--color-primary), 0.06) !important;
+        background: rgb(var(--color-primary) / 0.06) !important;
         border-radius: 0.5rem;
     }
     .hr-top-nav > ul > li:hover > .top-menu:not(.top-menu--active)::before {
@@ -227,7 +227,7 @@
         bottom: 0.38rem;
         height: 2px;
         border-radius: 9999px;
-        background: rgba(var(--color-primary), 0.55);
+        background: rgb(var(--color-primary) / 0.55);
         transform: scaleX(0);
         transform-origin: center;
         transition: transform 0.18s ease;
@@ -307,7 +307,7 @@
     .hr-top-nav .nav-clockin-statistics .statusArea > :nth-child(2),
     .hr-top-nav .nav-clockin-statistics .sinceArea > :nth-child(2) {
         margin-top: 0.15rem;
-        color: #15564d !important;
+        color: rgb(var(--color-primary)) !important;
         font-size: 0.82rem !important;
         font-weight: 700 !important;
         line-height: 1.1;
@@ -318,29 +318,75 @@
     }
 }
 
-/* Primary actions follow the top-bar gradient language */
-.btn.btn-primary, 
-.btn-primary, 
+/* Primary actions — "Slate & Teal" preset */
+.btn.btn-primary,
+.btn-primary,
 .btn.btn-go {
-    background: linear-gradient(260deg, #11544a 0%, #0c665a 50%, #1c6c61 80%) !important;
-    border-color: #246259 !important;
+    background: linear-gradient(180deg, #0e7c86 0%, #0b6670 100%) !important;
+    border-color: #0b6670 !important;
     color: #fff !important;
-    box-shadow: 0 8px 16px -10px #0e3d37b8;
+    box-shadow: 0 8px 16px -10px rgba(11, 102, 112, 0.7);
 }
 
 .btn.btn-primary:hover,
 .btn-primary:hover,
 .btn.btn-go:hover {
-    background: linear-gradient(260deg, #11544a 0%, #0c665a 50%, #1c6c61 80%) !important;
-    border-color: #0f3d36 !important;
+    background: linear-gradient(180deg, #0b6670 0%, #095863 100%) !important;
+    border-color: #095863 !important;
     color: #ffffff !important;
 }
 
 .btn.btn-primary:focus,
 .btn-primary:focus,
 .btn.btn-go:focus {
-    box-shadow: 0 0 0 0.24rem rgba(21, 86, 77, 0.24), 0 8px 16px -10px rgba(14, 61, 55, 0.72) !important;
+    box-shadow: 0 0 0 0.24rem rgba(14, 124, 134, 0.24), 0 8px 16px -10px rgba(11, 102, 112, 0.7) !important;
 }
+
+/* Accent (gold) outline action — e.g. "Add Temp Employee" */
+.btn.btn-outline-accent,
+.btn-outline-accent {
+    background: transparent;
+    border: 1px solid #e0a82e;
+    color: #9a6b12; /* dark gold — AA on white */
+}
+.btn.btn-outline-accent:hover,
+.btn-outline-accent:hover {
+    background: rgba(224, 168, 46, 0.12);
+    border-color: #e0a82e;
+    color: #9a6b12;
+}
+.btn.btn-outline-accent:focus,
+.btn-outline-accent:focus {
+    box-shadow: 0 0 0 0.2rem rgba(224, 168, 46, 0.28);
+}
+
+/* ── Status & alert tones (matches the HR design handoff) ── */
+.lcc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.1875rem 0.55rem;
+    border-radius: 9999px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+.lcc-badge.has-dot::before {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 9999px;
+    background: currentColor;
+    flex: none;
+    opacity: 0.9;
+}
+.lcc-badge--active   { background: #dcf1ef; color: #0b6670; }
+.lcc-badge--leave    { background: #fbf1dd; color: #9a6b12; }
+.lcc-badge--inactive { background: #eceef0; color: #67717a; }
+.lcc-badge--critical { background: #fdecec; color: #b42318; }
+.lcc-badge--warning  { background: #fbf3e2; color: #b45309; }
 
 .modal-alert{
     display: none;

@@ -53,6 +53,11 @@ module.exports = {
                     cream: '#faf8f4', // custom name
                 }),
                 primary: withOpacityValue('--color-primary'),
+                'primary-hover': withOpacityValue('--color-primary-hover'),
+                brand: withOpacityValue('--color-brand'),
+                accent: withOpacityValue('--color-accent'),
+                soft: withOpacityValue('--color-soft'),
+                'soft-text': withOpacityValue('--color-soft-text'),
                 secondary: withOpacityValue('--color-secondary'),
                 success: withOpacityValue('--color-success'),
                 info: withOpacityValue('--color-info'),
