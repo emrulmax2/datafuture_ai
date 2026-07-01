@@ -18,7 +18,7 @@
                         <div class="box sm:flex">
                             <div class="px-8 py-12 flex flex-col justify-center flex-1">
                                 <div class="w-30 h-30 flex-none image-fit rounded-full overflow-hidden">
-                                    <img alt="{{ $employee->title->name.' '.$employee->first_name.' '.$employee->last_name }}" class="rounded-full" src="{{ $employee->photo_url }}">
+                                    <img alt="{{ $employee->title->name.' '.$employee->first_name.' '.$employee->last_name }}" class="rounded-full" src="{{ $employee->brand_photo_url }}">
                                 </div>
                                 <div class="relative text-3xl font-medium mt-5">
                                     {{ $employee->title->name.' '.$employee->first_name.' '.$employee->last_name }}

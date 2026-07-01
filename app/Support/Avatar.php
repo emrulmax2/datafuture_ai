@@ -8,6 +8,9 @@ namespace App\Support;
  * profile photo. Returns a self-contained SVG data URI that drops straight
  * into any existing <img src="..."> (and inherits the container's shape, so
  * the usual `rounded-full` slots render it as a circle).
+ *
+ *  - initials()  → per-name colour from the palette (lists, tables, cards)
+ *  - brand()     → fixed brand-teal gradient (profile headers)
  */
 class Avatar
 {
@@ -30,10 +33,40 @@ class Avatar
         '#15803D', // green
     ];
 
+    /** Fixed brand-teal gradient (deep → bright) used on profile headers. */
+    protected static array $brand = ['#0A5E66', '#159FA0'];
+
     /**
-     * Build a data-URI SVG avatar from a person's name (first + last initial).
+     * Data-URI SVG avatar with a deterministic, per-name background colour.
      */
     public static function initials(?string $name, int $size = 200): string
+    {
+        return self::render($name, $size, self::colorFor($name));
+    }
+
+    /**
+     * Data-URI SVG avatar with the fixed brand-teal gradient (always the
+     * same colour regardless of the name) — used for profile pictures.
+     */
+    public static function brand(?string $name, int $size = 200): string
+    {
+        return self::render($name, $size, self::$brand);
+    }
+
+    /** Deterministic palette colour for a given name. */
+    protected static function colorFor(?string $name): string
+    {
+        $clean = trim(preg_replace('/\s+/', ' ', (string) $name));
+        $key   = $clean !== '' ? $clean : 'lcc';
+
+        return self::$palette[abs(crc32($key)) % count(self::$palette)];
+    }
+
+    /**
+     * Build the SVG. $fill is either a solid colour string or a [from, to]
+     * pair rendered as a diagonal linear gradient.
+     */
+    protected static function render(?string $name, int $size, $fill): string
     {
         $clean = trim(preg_replace('/\s+/', ' ', (string) $name));
 
@@ -45,12 +78,22 @@ class Avatar
             $letters = mb_strtoupper($first . $last);
         }
 
-        $key  = $clean !== '' ? $clean : 'lcc';
-        $bg   = self::$palette[abs(crc32($key)) % count(self::$palette)];
         $font = (int) round($size * (mb_strlen($letters) < 2 ? 0.46 : 0.42));
 
+        if (is_array($fill)) {
+            $defs = '<defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="1">'
+                  . '<stop offset="0" stop-color="' . $fill[0] . '"/>'
+                  . '<stop offset="1" stop-color="' . $fill[1] . '"/>'
+                  . '</linearGradient></defs>';
+            $rectFill = 'url(#a)';
+        } else {
+            $defs = '';
+            $rectFill = $fill;
+        }
+
         $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' . $size . '" height="' . $size . '" viewBox="0 0 ' . $size . ' ' . $size . '">'
-             . '<rect width="' . $size . '" height="' . $size . '" fill="' . $bg . '"/>'
+             . $defs
+             . '<rect width="' . $size . '" height="' . $size . '" fill="' . $rectFill . '"/>'
              . '<text x="50%" y="50%" dy="0.35em" text-anchor="middle" '
              . 'font-family="Arial, Helvetica, sans-serif" font-size="' . $font . '" '
              . 'font-weight="600" fill="#ffffff">' . htmlspecialchars($letters, ENT_QUOTES) . '</text>'

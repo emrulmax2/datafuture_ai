@@ -53,6 +53,14 @@ class Employee extends Model
         }
     }
 
+    public function getBrandPhotoUrlAttribute()
+    {
+        $url = $this->photo_url;
+        return str_starts_with($url, 'data:')
+            ? \App\Support\Avatar::brand($this->first_name.' '.$this->last_name)
+            : $url;
+    }
+
     public function getPhotoAttribute($value){
         return $value;
     }
