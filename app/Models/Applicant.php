@@ -206,7 +206,7 @@ class Applicant extends Model
         if ($this->photo !== null && Storage::disk('local')->exists('public/applicants/'.$this->id.'/'.$this->photo)) {
             return Storage::disk('local')->url('public/applicants/'.$this->id.'/'.$this->photo);
         } else {
-            return asset('build/assets/images/user_avatar.png');
+            return \App\Support\Avatar::initials($this->first_name.' '.$this->last_name);
         }
     }
 
