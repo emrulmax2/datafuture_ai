@@ -7,7 +7,7 @@
 @section('subcontent')
 <style type="text/css">
     body{
-        background-color: #f8f8f8 !important;
+        background-color: rgb(238, 241, 244) !important;
     }
 </style>
 <div class="max-w-[1340px] mx-auto px-6 py-5">
