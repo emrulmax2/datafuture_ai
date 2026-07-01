@@ -210,6 +210,14 @@ class Applicant extends Model
         }
     }
 
+    public function getBrandPhotoUrlAttribute()
+    {
+        $url = $this->photo_url;
+        return str_starts_with($url, 'data:')
+            ? \App\Support\Avatar::brand($this->first_name.' '.$this->last_name)
+            : $url;
+    }
+
     public function getCreationVenueStatusAttribute(){
         $proposed = ApplicantProposedCourse::where('applicant_id', $this->id)->get()->first();
         if(isset($proposed->id) && $proposed->id > 0){
