@@ -11,7 +11,7 @@
         {{-- Identity --}}
         <div class="flex items-center gap-5">
             <div class="relative flex-none w-24 h-24 image-fit">
-                <img alt="{{ $employee->title->name.' '.$employee->first_name.' '.$employee->last_name }}" class="rounded-full ring-4 ring-slate-100 dark:ring-darkmode-400" src="{{ (isset($employee->photo) && !empty($employee->photo) && Storage::disk('local')->exists('public/employees/'.$employee->id.'/'.$employee->photo) ? Storage::disk('local')->url('public/employees/'.$employee->id.'/'.$employee->photo) : asset('build/assets/images/avater.png')) }}">
+                <img alt="{{ $employee->title->name.' '.$employee->first_name.' '.$employee->last_name }}" class="rounded-full ring-4 ring-slate-100 dark:ring-darkmode-400" src="{{ $employee->photo_url }}">
                 <button data-tw-toggle="modal" data-tw-target="#addStudentPhotoModal" type="button" title="Change photo" class="absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white border-2 border-white dark:border-darkmode-600 hover:bg-primary-hover transition-colors">
                     <i data-lucide="camera" class="w-4 h-4"></i>
                 </button>
