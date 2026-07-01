@@ -53,7 +53,7 @@ class Student extends Model
         if ($this->photo !== null && Storage::disk('local')->exists('public/students/'.$this->id.'/'.$this->photo)) {
             return Storage::disk('local')->url('public/students/'.$this->id.'/'.$this->photo);
         } else {
-            return asset('build/assets/images/user_avatar.png');
+            return \App\Support\Avatar::initials($this->first_name.' '.$this->last_name);
         }
     }
     public function getReferralInfoAttribute() {

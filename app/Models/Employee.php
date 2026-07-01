@@ -49,7 +49,7 @@ class Employee extends Model
         if ($this->photo !== null && Storage::disk('local')->exists('public/employees/'.$this->id.'/'.$this->photo)) {
             return Storage::disk('local')->url('public/employees/'.$this->id.'/'.$this->photo);
         } else {
-            return asset('build/assets/images/placeholders/200x200.jpg');
+            return \App\Support\Avatar::initials($this->first_name.' '.$this->last_name);
         }
     }
 
