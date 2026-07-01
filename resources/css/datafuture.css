@@ -538,6 +538,7 @@
    Matches the "HR Dashboard — Design Handoff": serif display + grotesque body. */
 body {
     font-family: 'Public Sans', 'Roboto', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: rgb(238, 241, 244);
 }
 .font-display {
     font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
