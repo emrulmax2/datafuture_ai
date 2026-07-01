@@ -168,7 +168,7 @@ class AttendanceReportController extends Controller
                 if ($list->photo !== null && Storage::disk('local')->exists('public/students/'.$list->id.'/'.$list->photo)) {
                     $photo_url = Storage::disk('local')->url('public/students/'.$list->id.'/'.$list->photo);
                 } else {
-                    $photo_url = asset('build/assets/images/user_avatar.png');
+                    $photo_url = \App\Support\Avatar::initials($list->first_name.' '.$list->last_name);
                 }
                 $data[] = [
                     'id' => $list->id,
