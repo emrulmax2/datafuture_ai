@@ -385,7 +385,7 @@ $opt = App\Models\Option::where('category', 'SITE_SETTINGS')->where('name','site
                 @elseif(Auth::guard('agent')->check())
                     <img src="{{ asset('build/assets/images/avater.png') }}" >
                 @else
-                    <img alt="{{ $employeeUser->employee->title->name.' '.$employeeUser->employee->first_name.' '.$employeeUser->employee->last_name }}"  src="{{ (isset($employeeUser->employee->photo) && !empty($employeeUser->employee->photo) && Storage::disk('local')->exists('public/employees/'.$employeeUser->employee->id.'/'.$employeeUser->employee->photo) ? Storage::disk('local')->url('public/employees/'.$employeeUser->employee->id.'/'.$employeeUser->employee->photo) : asset('build/assets/images/avater.png')) }}" />
+                    <img alt="{{ $employeeUser->employee->title->name.' '.$employeeUser->employee->first_name.' '.$employeeUser->employee->last_name }}"  src="{{ $employeeUser->employee->photo_url }}" />
                 @endif
                 </div>
             </div>
