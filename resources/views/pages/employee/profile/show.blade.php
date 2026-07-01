@@ -5,7 +5,12 @@
 @endsection
 
 @section('subcontent')
-<div class="max-w-[1340px] mx-auto px-6 py-16">
+<style type="text/css">
+    body{
+        background-color: #f8f8f8 !important;
+    }
+</style>
+<div class="max-w-[1340px] mx-auto px-6 py-5">
     @include('pages.employee.profile.title-info')
     <!-- BEGIN: Profile Info -->
     @include('pages.employee.profile.show-info')
