@@ -12,8 +12,9 @@
 </style>
 @include('pages.employee.profile.partials.cover-header')
 
+@include('pages.employee.profile.partials.side-tabs')
+
 <div class="ep-grid">
-    @include('pages.employee.profile.partials.side-tabs')
     <div class="ep-col">
     <!-- BEGIN: Profile Info -->
     <!-- END: Profile Info -->

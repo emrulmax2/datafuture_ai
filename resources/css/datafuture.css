@@ -3578,32 +3578,47 @@ fieldset.modInstSet legend{
     .ep-cover__actions { flex-direction: column; align-items: flex-end; }
 }
 
-/* ---------- Body shell + left tab nav ---------- */
-.ep-grid { max-width: 1320px; margin: 0 auto; padding: 24px 20px 70px; display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start; }
-@media (min-width: 1024px) {
-    .ep-grid { grid-template-columns: 248px minmax(0, 1fr); gap: 26px; padding: 26px 32px 72px; }
-}
-.ep-side {
-    background: #fff; border: 1px solid #e1eae9; border-radius: 16px; box-shadow: 0 1px 3px rgba(11, 43, 40, 0.05);
-    padding: 12px; display: flex; flex-direction: column; gap: 2px;
+/* ---------- Horizontal tab nav (full-bleed, sticky under the app bar) ---------- */
+.ep-tabs {
+    background: #fff;
+    border-bottom: 1px solid #e1eae9;
+    box-shadow: 0 1px 3px rgba(11, 43, 40, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 40;
     font-family: 'Public Sans', system-ui, sans-serif;
 }
-@media (min-width: 1024px) { .ep-side { position: sticky; top: 76px; } }
-.ep-side__title { font-size: 10.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: #8aa3a0; padding: 8px 14px 10px; }
-.ep-side__link {
-    display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 10px;
-    font-size: 13.5px; font-weight: 500; color: #43605d; text-decoration: none; transition: background .14s, color .14s;
+/* On desktop the app bar (60px) stays sticky, so the tab bar sits directly beneath it */
+@media (min-width: 768px) { .ep-tabs { top: 60px; } }
+.ep-tabs__inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
-.ep-side__link:hover { background: #eef4f3; color: #12302d; }
-.ep-side__link.is-active { background: rgb(var(--color-primary)); color: #fff; font-weight: 700; box-shadow: 0 6px 14px -6px rgb(var(--color-primary) / 0.6); }
-.ep-side__link i, .ep-side__link svg { flex: none; }
-.ep-col { min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+.ep-tabs__inner::-webkit-scrollbar { display: none; }
+@media (min-width: 1024px) { .ep-tabs__inner { padding: 0 32px; } }
+.ep-tabs__link {
+    display: flex; align-items: center; gap: 8px;
+    padding: 15px 15px 12px;
+    font-size: 13.5px; font-weight: 500; color: #5c7977;
+    border-bottom: 3px solid transparent;
+    text-decoration: none; white-space: nowrap;
+    transition: color .15s ease, border-color .15s ease;
+}
+.ep-tabs__link:hover { color: #17312f; }
+.ep-tabs__link.is-active { color: rgb(var(--color-primary)); border-bottom-color: rgb(var(--color-primary)); font-weight: 700; }
+.ep-tabs__link i, .ep-tabs__link svg { width: 15px; height: 15px; flex: none; }
 
-/* On mobile the sticky left nav becomes a normal horizontal-scrolling card */
-@media (max-width: 1023px) {
-    .ep-side { flex-direction: row; flex-wrap: wrap; }
-    .ep-side__title { width: 100%; }
-}
+/* ---------- Body shell ---------- */
+.ep-grid { max-width: 1320px; margin: 0 auto; padding: 24px 20px 70px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-items: start; }
+@media (min-width: 1024px) { .ep-grid { padding: 26px 32px 72px; } }
+.ep-col { min-width: 0; display: flex; flex-direction: column; gap: 20px; }
 
 /* =====================================================================
    Employee Profile · Time Recorded — modern timesheet table (.ep-tk-*)

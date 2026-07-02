@@ -8,8 +8,9 @@
 
 @include('pages.employee.profile.partials.cover-header')
 
+@include('pages.employee.profile.partials.side-tabs')
+
 <div class="ep-grid">
-    @include('pages.employee.profile.partials.side-tabs')
     <div class="ep-col">
 
     <div class="intro-y mt-5">
