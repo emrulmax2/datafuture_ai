@@ -6,7 +6,7 @@
 
 @section('subcontent')
     <div class="grid grid-cols-12 gap-6">
-        <div id="content-box" class="max-w-[1340px] mx-auto px-6 py-5">
+        <div id="content-box">
         <div class="col-span-12">
             <!-- BEGIN: Breadcrumb -->
             <nav class="intro-y mt-5 ml-2" aria-label="breadcrumb">
@@ -32,7 +32,7 @@
             </div>
             <!-- END: Dashboard Header -->
         </div>
-        <div class="col-span-8 2xl:col-span-9">
+        <div class="col-span-12 xl:col-span-8 2xl:col-span-9">
             <!-- BEGIN: Employee Table Panel -->
             <div class="intro-y box mt-3">
                 <!-- Toolbar -->
@@ -243,7 +243,7 @@
 
         </div>
         <!-- BEGIN: Right Sidebar -->
-        <div class="col-span-4 2xl:col-span-3">
+        <div class="col-span-12 xl:col-span-4 2xl:col-span-3">
             <div class="dark:border-darkmode-400 2xl:h-full -mb-10 pb-10">
                 <div class="2xl:pl-6 grid grid-cols-12 gap-x-6 2xl:gap-x-0 gap-y-6 relative">
 
