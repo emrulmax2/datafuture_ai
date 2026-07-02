@@ -6,7 +6,6 @@
 
 @section('subcontent')
     <div class="grid grid-cols-12 gap-6">
-        <div id="content-box">
         <div class="col-span-12">
             <!-- BEGIN: Breadcrumb -->
             <nav class="intro-y mt-5 ml-2" aria-label="breadcrumb">
@@ -385,7 +384,6 @@
             </div>
         </div>
         <!-- END: Right Sidebar -->
-    </div><!-- END: CONTENT BOX Sidebar -->
     </div>
     <!-- BEGIN: Add Modal -->
     <div id="absentUpdateModal" class="modal" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
