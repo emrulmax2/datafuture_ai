@@ -9,6 +9,7 @@
     $epName = $epEmp && isset($epEmp->title->name)
         ? trim($epEmp->title->name.' '.$epEmp->first_name.' '.$epEmp->last_name)
         : (optional($epUser)->email ?? 'Staff User');
+    $epJobTitle = $epEmp?->employment?->employeeJobTitle?->name ?? '';
     $epInitials = '';
     if($epEmp) {
         $epInitials = strtoupper(substr($epEmp->first_name ?? '', 0, 1).substr($epEmp->last_name ?? '', 0, 1));
@@ -27,10 +28,6 @@
             @else
                 <span class="ep-brand__mark">LC</span>
             @endif
-            <span class="ep-brand__text">
-                <span class="ep-brand__l1">LONDON</span>
-                <span class="ep-brand__l2">CHURCHILL COLLEGE</span>
-            </span>
         </a>
 
         {{-- Primary nav (real, privilege-driven $top_menu) --}}
@@ -71,7 +68,7 @@
                 <button type="button" class="ep-account__btn">
                     <span class="ep-account__who">
                         <span class="ep-account__name">{{ $epName }}</span>
-                        <span class="ep-account__role">Staff User</span>
+                        <span class="ep-account__role">{{ $epJobTitle }}</span>
                     </span>
                     <span class="ep-account__avatar">
                         @if($epEmp && isset($epEmp->photo_url))
