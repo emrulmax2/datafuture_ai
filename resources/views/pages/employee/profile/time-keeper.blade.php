@@ -6,6 +6,7 @@
 
 @section('subcontent')
     
+<div class="max-w-[1340px] mx-auto px-6 py-5">
     @include('pages.employee.profile.title-info')
 
     <!-- BEGIN: Profile Info -->
@@ -255,6 +256,7 @@
         </div>
     </div>
     <!-- END: Warning Modal Content -->
+</div>
 @endsection
 
 @section('script')

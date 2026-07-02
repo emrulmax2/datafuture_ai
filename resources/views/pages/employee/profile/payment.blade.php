@@ -7,6 +7,7 @@
 @section('subcontent')
 
     
+<div class="max-w-[1340px] mx-auto px-6 py-5">
     @include('pages.employee.profile.title-info')
 
 
@@ -332,6 +333,7 @@
     <!-- BEGIN: Payment Modals -->
     @include('pages.employee.profile.payment-modal');
     <!-- END: Payment Modals -->
+</div>
 @endsection
 
 @section('script')
