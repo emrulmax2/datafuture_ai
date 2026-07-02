@@ -1,4 +1,4 @@
-@extends('../layout/' . $layout)
+@extends('../layout/employee-profile')
 
 @section('subhead')
     <title>{{ $title }}- </title>
@@ -7,12 +7,14 @@
 @section('subcontent')
 
     
-<div class="max-w-[1340px] mx-auto px-6 py-5">
-    @include('pages.employee.profile.title-info')
+@include('pages.employee.profile.partials.cover-header')
+
+<div class="ep-grid">
+    @include('pages.employee.profile.partials.side-tabs')
+    <div class="ep-col">
 
 
     <!-- BEGIN: Profile Info -->
-    @include('pages.employee.profile.show-info')
     <!-- END: Profile Info -->
 
     <div class="intro-y mt-5">
@@ -333,6 +335,7 @@
     <!-- BEGIN: Payment Modals -->
     @include('pages.employee.profile.payment-modal');
     <!-- END: Payment Modals -->
+</div>
 </div>
 @endsection
 
