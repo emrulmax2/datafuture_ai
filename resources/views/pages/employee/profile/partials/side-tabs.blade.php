@@ -20,14 +20,15 @@
     ];
 @endphp
 
-<nav class="ep-side">
-    <div class="ep-side__title">Employee Record</div>
-    @foreach($tabs as $t)
-        @if($t['show'])
-            <a href="{{ route($t['route'], $employee->id) }}" class="ep-side__link {{ in_array($current, $t['match']) ? 'is-active' : '' }}">
-                <i data-lucide="{{ $t['icon'] }}" class="w-4 h-4"></i>
-                <span>{{ $t['label'] }}</span>
-            </a>
-        @endif
-    @endforeach
+<nav class="ep-tabs">
+    <div class="ep-tabs__inner">
+        @foreach($tabs as $t)
+            @if($t['show'])
+                <a href="{{ route($t['route'], $employee->id) }}" class="ep-tabs__link {{ in_array($current, $t['match']) ? 'is-active' : '' }}">
+                    <i data-lucide="{{ $t['icon'] }}" class="w-4 h-4"></i>
+                    <span>{{ $t['label'] }}</span>
+                </a>
+            @endif
+        @endforeach
+    </div>
 </nav>
