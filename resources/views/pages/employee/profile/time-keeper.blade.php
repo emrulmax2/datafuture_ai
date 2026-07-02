@@ -56,7 +56,6 @@
                                                                     <span>Download PDF</span>
                                                                 </a>
                                                             </div>
-                                                            <div class="ep-tk-scroll">
                                                                 <table class="ep-tk-table">
                                                                     <thead>
                                                                         <tr>
@@ -85,7 +84,7 @@
                                                                         </tr>
                                                                     </tfoot>
                                                                 </table>
-                                                            </div>
+                                                            
                                                         </div>
                                                     @endif
                                                 </div>
