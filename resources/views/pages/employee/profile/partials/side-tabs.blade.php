@@ -11,7 +11,7 @@
         ['show' => $hrPortal && $hasHoliday, 'route' => 'employee.holiday',             'match' => ['employee.holiday'],                               'icon' => 'sun',         'label' => 'Holidays'],
         ['show' => $hrPortal && $hasPayslip, 'route' => 'profile.employee.payslip.show','match' => ['profile.employee.payslip.show'],                  'icon' => 'receipt',     'label' => 'Payslips'],
         ['show' => $hrPortal,                'route' => 'employee.documents',           'match' => ['employee.documents'],                             'icon' => 'file-text',   'label' => 'Documents'],
-        ['show' => $hrPortal,                'route' => 'employee.notes',               'match' => ['employee.notes'],                                 'icon' => 'edit-3',      'label' => 'Notes'],
+        ['show' => $hrPortal,                'route' => 'employee.notes',               'match' => ['employee.notes'],                                 'icon' => 'sticky-note', 'label' => 'Notes'],
         ['show' => true,                     'route' => 'employee.appraisal',           'match' => ['employee.appraisal', 'employee.appraisal.documents'], 'icon' => 'award',   'label' => 'Appraisal & Training'],
         ['show' => $hrPortal && $canPriv,    'route' => 'employee.privilege',           'match' => ['employee.privilege'],                             'icon' => 'lock',        'label' => 'Privilege'],
         ['show' => $hrPortal,                'route' => 'employee.time.keeper',         'match' => ['employee.time.keeper'],                           'icon' => 'clock',       'label' => 'Time Recorded'],
