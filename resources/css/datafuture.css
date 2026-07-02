@@ -3604,3 +3604,224 @@ fieldset.modInstSet legend{
     .ep-side { flex-direction: row; flex-wrap: wrap; }
     .ep-side__title { width: 100%; }
 }
+
+/* =====================================================================
+   Employee Profile · Time Recorded — modern timesheet table (.ep-tk-*)
+   Scoped to .ep-tk-table so the legacy .attendanceDetailsTable styling
+   used on other pages / in the PDF is untouched. The <table> DOM is kept
+   (thead / tbody / tfoot) for the AJAX injection contract, but rows are
+   laid out with CSS grid for a modern look.
+   ===================================================================== */
+.ep-tk-card {
+    background: #fff;
+    border: 1px solid #e6eaef;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(16, 38, 45, .04), 0 14px 34px -20px rgba(16, 38, 45, .28);
+}
+.ep-tk-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eef2f6;
+}
+.ep-tk-card__title {
+    font-family: 'Newsreader', ui-serif, Georgia, serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.15;
+    color: #10262e;
+}
+.ep-tk-card__sub { margin-top: 2px; font-size: 12.5px; color: #7a8891; }
+.ep-tk-pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border-radius: 10px;
+    border: 1px solid #10262e;
+    background: #10262e;
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background .15s ease, transform .05s ease;
+}
+.ep-tk-pdf:hover { background: #183a44; color: #fff; }
+.ep-tk-pdf:active { transform: translateY(1px); }
+.ep-tk-pdf svg { width: 16px; height: 16px; flex: none; }
+
+.ep-tk-scroll { overflow: auto; max-height: 70vh; }
+
+.ep-tk-table {
+    display: block;
+    width: 100%;
+    min-width: 1080px;
+    border-collapse: collapse;
+    font-family: 'Public Sans', ui-sans-serif, system-ui, sans-serif;
+}
+.ep-tk-table thead,
+.ep-tk-table tbody,
+.ep-tk-table tfoot { display: block; }
+
+/* Shared 9-column grid for the header row + every data row */
+.ep-tk-table thead tr,
+.ep-tk-table tbody tr {
+    display: grid;
+    grid-template-columns: 132px 128px 176px 72px 104px 88px 88px 124px minmax(170px, 1fr);
+    align-items: center;
+}
+.ep-tk-table thead tr {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: #f8fafc;
+    border-bottom: 1px solid #e6eaef;
+}
+.ep-tk-th {
+    padding: 11px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #64748b;
+    white-space: nowrap;
+}
+.ep-tk-th--num { text-align: right; }
+
+.ep-tk-table tbody tr.ep-tk-row { transition: background .12s ease; }
+.ep-tk-table tbody tr.ep-tk-row:hover { background: #f8fafc; }
+.ep-tk-td {
+    padding: 10px 14px;
+    border-top: 1px solid #eef2f6;
+    min-width: 0;
+    font-size: 13px;
+    color: #334155;
+}
+
+/* Date */
+.ep-tk-date__day { display: block; font-weight: 700; font-size: 13px; color: #0f172a; }
+.ep-tk-date__sub { display: block; font-size: 11px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+
+/* Status pills — dot inherits the pill text colour */
+.ep-tk-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+.ep-tk-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: none; }
+.ep-tk-pill--wk { background: #e3f3ec; color: #0b6b4f; }
+.ep-tk-pill--ov { background: #fdecd6; color: #9a5b00; }
+.ep-tk-pill--bh { background: #fde9dc; color: #b5470f; }
+.ep-tk-pill--hv { background: #e5f0fb; color: #1f5c9e; }
+.ep-tk-pill--mt { background: #f6e7e2; color: #7a2410; }
+.ep-tk-pill--sl { background: #fce7e7; color: #b01818; }
+.ep-tk-pill--au { background: #efe9fb; color: #5b34a6; }
+.ep-tk-pill--ap { background: #def1ee; color: #0b7268; }
+.ep-tk-pill--nt { background: #eef1f4; color: #5b6b74; }
+
+/* Clock in/out */
+.ep-tk-clock__main { display: block; font-size: 13px; color: #0f172a; font-variant-numeric: tabular-nums; }
+.ep-tk-clock__sub  { display: block; font-size: 11px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+
+/* Numeric columns */
+.ep-tk-num { text-align: right; font-variant-numeric: tabular-nums; }
+.ep-tk-strong { font-weight: 700; color: #0f172a; }
+.ep-tk-hol    { font-weight: 700; color: #b5470f; }
+.ep-tk-muted  { color: #cbd5e1; }
+
+/* Pay */
+.ep-tk-pay { text-align: right; }
+.ep-tk-pay__amt  { display: block; font-weight: 700; font-size: 13px; color: #0f172a; font-variant-numeric: tabular-nums; }
+.ep-tk-pay__rate { display: block; font-size: 11px; color: #94a3b8; }
+
+/* Notes */
+.ep-tk-notes { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+.ep-tk-note { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #64748b; }
+.ep-tk-note--warn {
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: #fdf2df;
+    border: 1px solid #f5dca8;
+    color: #9a5b00;
+    font-weight: 600;
+}
+.ep-tk-note__ico { width: 13px; height: 13px; flex: none; }
+
+/* Collapsed off-schedule gap rows */
+.ep-tk-table tbody tr.ep-tk-gap { display: flex; align-items: center; }
+.ep-tk-gap__cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 16px;
+    border-top: 1px solid #eef2f6;
+    background: repeating-linear-gradient(135deg, #fbfcfd, #fbfcfd 10px, #f5f7f9 10px, #f5f7f9 20px);
+}
+.ep-tk-gap__label { font-size: 12px; font-weight: 700; color: #8b97a0; white-space: nowrap; }
+.ep-tk-gap__meta  { font-size: 11.5px; color: #aab4bb; }
+
+/* Loading placeholder */
+.ep-tk-table tbody tr.ep-tk-loading { display: flex; }
+.ep-tk-loading .ep-tk-td {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 34px 16px;
+    border-top: 0;
+    color: #7a8891;
+    font-weight: 500;
+}
+.ep-tk-spinner {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    border: 2.5px solid #d7dee3;
+    border-top-color: rgb(var(--color-primary));
+    border-radius: 50%;
+    animation: ep-tk-spin .7s linear infinite;
+}
+@keyframes ep-tk-spin { to { transform: rotate(360deg); } }
+
+/* Dark totals footer (sticky to the bottom of the scroll area) */
+.ep-tk-table tfoot tr.ep-tk-foot {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    padding: 14px 20px;
+    background: #10262e;
+    color: #fff;
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+}
+.ep-tk-foot__title {
+    margin-right: auto;
+    font-family: 'Newsreader', ui-serif, Georgia, serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+}
+.ep-tk-foot__stat { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+.ep-tk-foot__k {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-weight: 600;
+    color: #8fb3ad;
+}
+.ep-tk-foot__v { font-size: 15px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+.ep-tk-foot__stat--pay .ep-tk-foot__v { color: #e0a82e; }
